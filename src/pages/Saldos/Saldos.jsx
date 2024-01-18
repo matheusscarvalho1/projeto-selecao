@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
+
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RegistroSaldo from "./RegistroSaldo";
 import styles from "./saldos.module.css";
 import { useNavigate } from "react-router-dom";
+
 import useAuth from "../../state/auth";
 
 const Saldos = () => {
