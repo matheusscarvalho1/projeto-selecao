@@ -1,0 +1,24 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200px;
+}
+
+.table {
+  min-height: 400;
+  width: 100%;
+}
+
+.btn {
+  border-radius: 50px;
+  width: 200px;
+}
+
+.lastBtn {
+  border-radius: 50px;
+  width: 100px;
+  align-items: flex-end;
+}

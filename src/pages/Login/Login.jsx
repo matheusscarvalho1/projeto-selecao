@@ -1,9 +1,11 @@
 import { useState } from "react";
 
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import useAuth from "../../state/auth";
+
+import styles from "./login.module.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,29 +37,32 @@ const Login = () => {
     }, 3000);
   };
 
+  const handleBack = () => {
+    navigate("/");
+  };
+
   return (
     <>
-      <Typography variant="h3">Faça seu login</Typography>
-
-      <div style={{ margin: "16px" }}>
+      <div className={styles.form}>
         <TextField
           onChange={handleInputChange}
           label="Digite o seu e-mail"
           name="email"
           type="email"
         />
-      </div>
-      <div style={{ margin: "16px" }}>
+
         <TextField
           onChange={handleInputChange}
           label="Digite a sua senha"
           name="password"
           type="password"
         />
-      </div>
-      <div style={{ margin: "16px" }}>
+
         <Button onClick={handleFormSubmit} variant="contained" color="primary">
           {isLoading ? "Carregando..." : "Entrar"}
+        </Button>
+        <Button onClick={() => handleBack()} variant="outlined" color="primary">
+          Voltar{" "}
         </Button>
       </div>
     </>

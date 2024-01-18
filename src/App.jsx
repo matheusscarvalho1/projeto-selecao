@@ -5,8 +5,12 @@ import TemplateClean from "./templates/Clean";
 
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
+
 import Pagamentos from "./pages/Pagamentos/Pagamentos";
+import RegistroPagamentos from "./pages/Pagamentos/RegistroPagamento";
+
 import Saldos from "./pages/Saldos/Saldos";
+import RegistroSaldos from "./pages/Saldos/RegistroSaldo";
 
 import { AuthProvider } from "./state/auth";
 
@@ -18,13 +22,25 @@ const App = () => {
           <Route
             path="/login"
             element={
-              <TemplateClean title="Acesso Restrito" Component={Login} /> // Aplicando templates de titulo nas paginas no component Customers
+              <TemplateClean title="Faça seu login" Component={Login} /> // Aplicando templates de titulo nas paginas no component Customers
+            }
+          />
+          <Route
+            path="/pagamentos/add"
+            element={
+              <TemplatePage title="Pagamentos" Component={RegistroPagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
             }
           />
           <Route
             path="/pagamentos"
             element={
               <TemplatePage title="Pagamentos" Component={Pagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
+            }
+          />
+          <Route
+            path="/saldos/add"
+            element={
+              <TemplatePage title="Saldos" Component={RegistroSaldos} /> // Aplicando templates de titulo nas paginas no component Customers
             }
           />
           <Route

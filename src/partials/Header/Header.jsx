@@ -47,7 +47,7 @@ const Header = () => {
           });
           handleToggleMenu();
           navigate("/");
-        }, 2000)
+        }, 1500)
       : alert("Você não efetuou login.");
   };
 

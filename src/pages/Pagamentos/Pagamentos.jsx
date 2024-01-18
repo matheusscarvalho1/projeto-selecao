@@ -1,9 +1,11 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+import styles from "./pagamentos.module.css";
 
 const handleEdit = (id) => {
   alert("Editar");
@@ -129,27 +131,38 @@ const rows = [
 const Pagamentos = () => {
   return (
     <>
-      <Box
-        sx={{
-          height: 400,
-          width: "100%",
-        }}
-      >
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+      {rows.length === 0 ? (
+        <div className={styles.box}>
+          <p>Você não possui pedidos abertos.</p>
+          <Button variant="contained" className={styles.btn}>
+            Criar pedido
+          </Button>
+        </div>
+      ) : (
+        <Box className={styles.table}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
               },
-            },
-          }}
-          pageSizeOptions={[10]}
-          checkboxSelection
-          disableRowSelectionOnClick
-        />
-      </Box>
+            }}
+            pageSizeOptions={[10]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
+          <Button
+            variant="contained"
+            className={styles.lastBtn}
+            onClick={() => alert("Criar")}
+          >
+            Criar
+          </Button>
+        </Box>
+      )}
     </>
   );
 };
