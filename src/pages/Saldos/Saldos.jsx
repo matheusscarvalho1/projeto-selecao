@@ -14,7 +14,7 @@ import useAuth from "../../state/auth";
 const Saldos = () => {
   const navigate = useNavigate();
 
-  const { saldos, setSaldos } = useAuth();
+  const { saldos, setSaldos, nextId, setNextId } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -35,6 +35,13 @@ const Saldos = () => {
 
   const handleConfirmModal = (id) => {
     const updatedSaldos = saldos.filter((saldo) => saldo.id !== id);
+    setSaldos(updatedSaldos);
+
+    // Atualizar o nextId apenas se o ID removido for o mais alto
+    if (id === nextId - 1) {
+      setNextId(nextId - 1);
+    }
+
     setSaldos(updatedSaldos);
     setOpenModal(!openModal);
   };
