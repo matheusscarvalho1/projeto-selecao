@@ -1,118 +1,99 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { TextField, Button } from "@mui/material";
 import styles from "./registroSaldo.module.css";
-
+import useAuth from "../../state/auth";
 import { useNavigate } from "react-router-dom";
 
 const RegistroSaldo = () => {
+  const { setSaldos, nextId, setNextId } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: {
-      value: "",
-      error: false,
-    },
-    value: {
-      value: "",
-      error: false,
-    },
-  });
+  const nameRef = useRef(null);
+  const valueRef = useRef(null);
 
-  const [nextId, setNextId] = useState(1);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setForm({
-      ...form,
-      [name]: {
-        value,
-        error: false, // Resetando o erro ao digitar
-      },
-    });
-  };
+  const [nameError, setNameError] = React.useState(false);
+  const [valueError, setValueError] = React.useState(false);
 
   const handleRegisterButton = () => {
     let hasError = false;
-    let newFormState = { ...form };
 
-    if (!form.name.value) {
+    if (!nameRef.current.value) {
       hasError = true;
-
-      newFormState.name = {
-        value: form.name.value,
-        error: true,
-        helperText: "Digite o campo 'Nome' corretamente.",
-      };
+      setNameError(true);
+    } else {
+      setNameError(false);
     }
 
-    if (!form.value.value) {
+    if (!valueRef.current.value) {
       hasError = true;
+      setValueError(true);
+    } else {
+      setValueError(false);
+    }
 
-      newFormState.value = {
-        value: form.value.value,
-        error: true,
-        helperText: "Digite o campo 'Valor' corretamente.",
-      };
+    if (isNaN(valueRef.current.value)) {
+      hasError = true;
+      setValueError(true);
     }
 
     if (hasError) {
-      return setForm(newFormState);
+      return;
     }
 
-    setForm({
-      name: { value: "", error: false },
-      value: { value: "", error: false },
-    });
+    const novoSaldo = {
+      id: nextId,
+      nome: nameRef.current.value,
+      descricao: "",
+      valorInicial: parseFloat(valueRef.current.value),
+      valorUtilizado: 0,
+      valorRestante: parseFloat(valueRef.current.value),
+    };
 
+    setSaldos((prevSaldos) => [...prevSaldos, novoSaldo]);
     setNextId((prevId) => prevId + 1);
-    console.log(form);
-    navigate("/saldos", {
-      state: {
-        nome: form.name.value,
-        valor: form.value.value,
-      },
-    });
-  };
 
-  const handleBackButton = () => {
-    // Utilize navigate para voltar para a rota /saldos
+    nameRef.current.value = "";
+    valueRef.current.value = "";
+
     navigate("/saldos");
   };
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.subTitle}>Criar saldo</h1>
+      <h1>Criar saldo</h1>
       <div className={styles.inputWrapper}>
         <div>
           <TextField
-            error={form.name.error}
-            helperText={form.name.error ? form.name.helperText : ""}
             id="outlined-basic"
             label="Nome"
             variant="outlined"
-            value={form.name.value}
-            name="name"
-            onChange={handleInputChange}
+            inputRef={nameRef}
+            error={nameError}
+            helperText={nameError && "Digite o campo 'Nome' corretamente."}
             className={styles.input}
           />
         </div>
         <div>
           <TextField
-            error={form.value.error}
-            helperText={form.value.error ? form.value.helperText : ""}
             id="outlined-basic"
             label="Valor"
             variant="outlined"
-            value={form.value.value}
-            name="value"
-            onChange={handleInputChange}
+            inputRef={valueRef}
+            error={valueError}
+            helperText={valueError && "Digite o campo 'Valor' corretamente."}
             className={styles.input}
+            InputProps={{
+              startAdornment: <span>R$ </span>,
+            }}
           />
         </div>
       </div>
       <div className={styles.btns}>
-        <Button variant="outlined" color="primary" onClick={handleBackButton}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => navigate("/saldos")}
+        >
           Voltar
         </Button>
         <Button variant="contained" onClick={handleRegisterButton}>

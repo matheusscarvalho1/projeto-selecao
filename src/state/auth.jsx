@@ -1,4 +1,4 @@
-import { useContext, createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext({});
 
@@ -8,11 +8,21 @@ export const AuthProvider = ({ children }) => {
     email: "",
   });
 
-  //A aplicação toda irá ter acesso a esse state
+  const [saldos, setSaldos] = useState([]);
+
+  const [nextId, setNextId] = useState(1);
+
+  const contextValue = {
+    user,
+    setUser,
+    saldos,
+    setSaldos,
+    nextId,
+    setNextId,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 
