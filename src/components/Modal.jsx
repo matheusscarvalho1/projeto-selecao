@@ -9,7 +9,7 @@ import {
 
 const Modal = ({ open, onClose, onConfirm, title, message }) => {
   return (
-    <Modal>
+    <>
       <Dialog
         open={open}
         onClose={onClose}
@@ -22,14 +22,16 @@ const Modal = ({ open, onClose, onConfirm, title, message }) => {
             {message}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Button onClick={onClose}>Cancelar</Button>
           <Button variant="contained" onClick={onConfirm} autoFocus>
-            Confirmar
+            Excluir
           </Button>
         </DialogActions>
       </Dialog>
-    </Modal>
+    </>
   );
 };
 export default Modal;

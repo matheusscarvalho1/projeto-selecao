@@ -7,27 +7,40 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RegistroSaldo from "./RegistroSaldo";
 import styles from "./saldos.module.css";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "../../components/Modal";
 
 import useAuth from "../../state/auth";
 
 const Saldos = () => {
+  const navigate = useNavigate();
+
   const { saldos, setSaldos } = useAuth();
   const [showForm, setShowForm] = useState(false);
-  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     setRows([...saldos]);
   }, [saldos]);
 
+  //Editar
   const handleEdit = (id) => {
     alert("Editar");
   };
 
-  const handleDelete = (id) => {
-    // Atualizar o estado saldos após a exclusão
+  //DELETAR
+  const handleToggleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
+
+  const handleConfirmModal = (id) => {
     const updatedSaldos = saldos.filter((saldo) => saldo.id !== id);
     setSaldos(updatedSaldos);
+    setOpenModal(!openModal);
+  };
+
+  const handleRemove = () => {
+    handleToggleOpenModal();
   };
 
   const handleRegister = (data) => {
@@ -81,10 +94,17 @@ const Saldos = () => {
           <IconButton
             color="secondary"
             aria-label="Excluir"
-            onClick={() => handleDelete(params.row.id)}
+            onClick={handleRemove}
           >
             <DeleteIcon />
           </IconButton>
+          <DeleteModal
+            open={openModal}
+            onClose={handleToggleOpenModal}
+            onConfirm={() => handleConfirmModal(params.row.id)}
+            title="Excluir Pedido?"
+            message="Se excluir este pedido, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
+          />
         </>
       ),
     },
