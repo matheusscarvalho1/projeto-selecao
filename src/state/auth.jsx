@@ -8,13 +8,9 @@ export const AuthProvider = ({ children }) => {
     email: "",
   });
 
-  const [saldos, setSaldos] = useState([]);
-  const [nameSaldo, setNameSaldo] = useState("");
   //A aplicação toda irá ter acesso a esse state
   return (
-    <AuthContext.Provider
-      value={{ user, setUser, saldos, setSaldos, nameSaldo, setNameSaldo }}
-    >
+    <AuthContext.Provider value={{ user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,0 +1,23 @@
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.menuBar {
+  flex-grow: 1;
+}
+
+.toggleBar {
+  width: 300px;
+}
+
+.menuItem {
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}

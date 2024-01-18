@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+//import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button } from "@mui/material";
@@ -9,12 +10,19 @@ import styles from "./saldos.module.css";
 import { useNavigate } from "react-router-dom";
 
 const Saldos = () => {
+  // const location = useLocation();
+
+  // const { state } = location;
+  // const nome = location.state?.nome || "";
+  // const valor = location.state?.valor || "";
+  //console.log(location.state.nome, location.state.valor);
+
   const [rows, setRows] = useState([
     {
       id: 1,
-      nome: "Saldo 1",
+      nome: /*nome,*/ "Saldo 2",
       descricao: "Descrição 1",
-      valorInicial: 100,
+      valorInicial: /*valor*/ 200,
       valorUtilizado: 20,
       valorRestante: 80,
     },
@@ -134,7 +142,11 @@ const Saldos = () => {
             checkboxSelection
             disableRowSelectionOnClick
           />
-          <Button variant="contained" onClick={handleButton}>
+          <Button
+            variant="contained"
+            onClick={handleButton}
+            className={styles.btnCreate}
+          >
             Criar Novo Saldo
           </Button>
         </Box>

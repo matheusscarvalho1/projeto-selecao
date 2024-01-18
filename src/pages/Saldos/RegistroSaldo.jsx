@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import styles from "./registroSaldo.module.css";
-import useAuth from "../../state/auth";
+
 import { useNavigate } from "react-router-dom";
 
 const RegistroSaldo = () => {
-  const { setSaldos, saldos } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -43,7 +42,7 @@ const RegistroSaldo = () => {
       newFormState.name = {
         value: form.name.value,
         error: true,
-        helperText: "Digite o campo 'Nome' corretamente!",
+        helperText: "Digite o campo 'Nome' corretamente.",
       };
     }
 
@@ -53,7 +52,7 @@ const RegistroSaldo = () => {
       newFormState.value = {
         value: form.value.value,
         error: true,
-        helperText: "Digite o campo 'Valor' corretamente!",
+        helperText: "Digite o campo 'Valor' corretamente.",
       };
     }
 
@@ -61,33 +60,29 @@ const RegistroSaldo = () => {
       return setForm(newFormState);
     }
 
-    const novoSaldo = {
-      id: nextId,
-      nome: form.name.value,
-      descricao: "",
-      valorInicial: parseFloat(form.value.value),
-      valorUtilizado: 0,
-      valorRestante: parseFloat(form.value.value),
-    };
-
-    setSaldos([...saldos, novoSaldo]);
-
     setForm({
       name: { value: "", error: false },
       value: { value: "", error: false },
     });
 
     setNextId((prevId) => prevId + 1);
+    console.log(form);
+    navigate("/saldos", {
+      state: {
+        nome: form.name.value,
+        valor: form.value.value,
+      },
+    });
   };
 
-  const handleCancel = () => {
+  const handleBackButton = () => {
     // Utilize navigate para voltar para a rota /saldos
     navigate("/saldos");
   };
 
   return (
     <div className={styles.container}>
-      <h1>Criar saldo</h1>
+      <h1 className={styles.subTitle}>Criar saldo</h1>
       <div className={styles.inputWrapper}>
         <div>
           <TextField
@@ -116,9 +111,8 @@ const RegistroSaldo = () => {
           />
         </div>
       </div>
-
       <div className={styles.btns}>
-        <Button variant="outlined" color="primary" onClick={handleCancel}>
+        <Button variant="outlined" color="primary" onClick={handleBackButton}>
           Voltar
         </Button>
         <Button variant="contained" onClick={handleRegisterButton}>

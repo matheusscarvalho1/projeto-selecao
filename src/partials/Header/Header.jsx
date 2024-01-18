@@ -24,6 +24,8 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 
 import useAuth from "../../state/auth";
 
+import styles from "./header.module.css";
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -60,16 +62,16 @@ const Header = () => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            className={styles.icon}
             onClick={() => handleToggleMenu()}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" className={styles.menuBar}>
             Payments
           </Typography>
           {user.logged ? (
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div className={styles.user}>
               <Typography variant="h6">{user.email}</Typography>
               <AccountCircle />
             </div>
@@ -81,13 +83,9 @@ const Header = () => {
         </Toolbar>
       </AppBar>
       <Drawer open={menuOpen} onClose={() => handleToggleMenu(false)}>
-        <List sx={{ width: "300px" }}>
+        <List className={styles.toggleBar}>
           <ListItemButton
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "16px",
-            }}
+            className={styles.menuItem}
             onClick={() => handleMenuClick("/pagamentos")}
           >
             <ListItemIcon>
@@ -96,11 +94,7 @@ const Header = () => {
             <ListItemText>Pagamentos</ListItemText>
           </ListItemButton>
           <ListItemButton
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "16px",
-            }}
+            className={styles.menuItem}
             onClick={() => handleMenuClick("/saldos")}
           >
             <ListItemIcon>
@@ -108,7 +102,10 @@ const Header = () => {
             </ListItemIcon>
             <ListItemText>Saldos</ListItemText>
           </ListItemButton>
-          <ListItemButton onClick={() => handleLogout()}>
+          <ListItemButton
+            className={styles.menuItem}
+            onClick={() => handleLogout()}
+          >
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
