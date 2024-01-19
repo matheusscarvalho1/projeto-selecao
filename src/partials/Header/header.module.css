@@ -1,11 +1,11 @@
 .user {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .icon {
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 
 .menuBar {
@@ -13,11 +13,11 @@
 }
 
 .toggleBar {
-  width: 300px;
+  width: 18.75rem;
 }
 
 .menuItem {
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  padding: 1rem;
 }
