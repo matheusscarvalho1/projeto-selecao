@@ -14,7 +14,9 @@ import useAuth from "../../state/auth";
 const Pagamentos = () => {
   const navigate = useNavigate();
 
-  const { pagamentos, setPagamentos, nextId, setNextId } = useAuth();
+  const { pagamentos, setPagamentos, nextId, setNextId, setEditPayment } =
+    useAuth();
+
   const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -25,7 +27,11 @@ const Pagamentos = () => {
   }, [pagamentos]);
 
   const handleEdit = (id) => {
-    alert("Editar");
+    const paymentToEdit = pagamentos.find((payment) => payment.id === id);
+
+    setEditPayment(paymentToEdit);
+
+    navigate(`/pagamentos/edit/${id}`);
   };
 
   const handleToggleOpenModal = (id) => {
@@ -47,6 +53,7 @@ const Pagamentos = () => {
     );
 
     setPagamentos(updatedPagamentosWithNewIds);
+    setNextId(updatedPagamentos.length + 1); // Atualizar o próximo ID
     setOpenModal(false);
     setIdToDelete(null);
   };

@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [saldos, setSaldos] = useState([]);
   const [pagamentos, setPagamentos] = useState([]);
   const [nextId, setNextId] = useState(1);
+  const [editPayment, setEditPayment] = useState(null);
 
   const contextValue = {
     user,
@@ -21,6 +22,8 @@ export const AuthProvider = ({ children }) => {
     setNextId,
     pagamentos,
     setPagamentos,
+    editPayment,
+    setEditPayment,
   };
 
   return (

@@ -8,6 +8,7 @@ import Login from "./pages/Login/Login";
 
 import Pagamentos from "./pages/Pagamentos/Pagamentos";
 import RegistroPagamentos from "./pages/Pagamentos/RegistroPagamento";
+import EditarPagamentos from "./pages/Pagamentos/EditarPagamentos";
 
 import Saldos from "./pages/Saldos/Saldos";
 import RegistroSaldos from "./pages/Saldos/RegistroSaldo";
@@ -23,6 +24,12 @@ const App = () => {
             path="/login"
             element={
               <TemplateClean title="Faça seu login" Component={Login} /> // Aplicando templates de titulo nas paginas no component Customers
+            }
+          />
+          <Route
+            path="/pagamentos/edit/:id"
+            element={
+              <TemplatePage title="Pagamentos" Component={EditarPagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
             }
           />
           <Route
