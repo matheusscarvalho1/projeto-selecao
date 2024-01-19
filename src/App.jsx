@@ -12,6 +12,7 @@ import EditarPagamentos from "./pages/Pagamentos/EditarPagamentos";
 
 import Saldos from "./pages/Saldos/Saldos";
 import RegistroSaldos from "./pages/Saldos/RegistroSaldo";
+import EditarSaldos from "./pages/Saldos/EditarSaldo";
 
 import { AuthProvider } from "./state/auth";
 
@@ -33,6 +34,12 @@ const App = () => {
             }
           />
           <Route
+            path="/pagamentos/edit/:id"
+            element={
+              <TemplatePage title="Pagamentos" Component={EditarPagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
+            }
+          />
+          <Route
             path="/pagamentos/add"
             element={
               <TemplatePage title="Pagamentos" Component={RegistroPagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
@@ -42,6 +49,12 @@ const App = () => {
             path="/pagamentos"
             element={
               <TemplatePage title="Pagamentos" Component={Pagamentos} /> // Aplicando templates de titulo nas paginas no component Customers
+            }
+          />
+          <Route
+            path="/saldos/edit/:id"
+            element={
+              <TemplatePage title="Saldos" Component={EditarSaldos} /> // Aplicando templates de titulo nas paginas no component Customers
             }
           />
           <Route

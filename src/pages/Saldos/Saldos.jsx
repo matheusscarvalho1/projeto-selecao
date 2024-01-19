@@ -24,7 +24,7 @@ const Saldos = () => {
   }, [saldos]);
 
   const handleEdit = (id) => {
-    alert("Editar");
+    navigate(`/saldos/edit/${id}`);
   };
 
   const handleToggleOpenModal = (id) => {

@@ -9,7 +9,7 @@ import useAuth from "../../state/auth";
 import styles from "./registroPagamento.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Edit = () => {
+const EditPagamento = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { pagamentos, setPagamentos, editPayment } = useAuth();
@@ -174,4 +174,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default EditPagamento;
