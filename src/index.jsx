@@ -18,6 +18,12 @@ const theme = createTheme({
     tertiary: {
       main: "#676767",
     },
+    warning: {
+      main: "#f44336",
+    },
+    normal: {
+      main: "#2196f3",
+    },
   },
 });
 

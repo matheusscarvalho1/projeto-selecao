@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,41 +17,48 @@ const Saldos = () => {
   const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
     setRows([...saldos]);
   }, [saldos]);
 
-  //Editar
   const handleEdit = (id) => {
     alert("Editar");
   };
 
-  //DELETAR
-  const handleToggleOpenModal = () => {
+  const handleToggleOpenModal = (id) => {
+    setIdToDelete(id);
     setOpenModal(!openModal);
   };
 
-  const handleConfirmModal = (id) => {
-    const updatedSaldos = saldos.filter((saldo) => saldo.id !== id);
-    setSaldos(updatedSaldos);
+  const handleConfirmModal = () => {
+    const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
 
-    // Atualizar o nextId apenas se o ID removido for o mais alto
-    if (id === nextId - 1) {
-      setNextId(nextId - 1);
-    }
+    // Reordenar os IDs
+    const updatedSaldosWithNewIds = updatedSaldos.map((saldo, index) => ({
+      ...saldo,
+      id: index + 1,
+    }));
 
-    setSaldos(updatedSaldos);
-    setOpenModal(!openModal);
+    setSaldos(updatedSaldosWithNewIds);
+    setOpenModal(false);
+    setIdToDelete(null);
   };
 
-  const handleRemove = () => {
-    handleToggleOpenModal();
+  const handleRemove = (id) => {
+    handleToggleOpenModal(id);
   };
 
   const handleRegister = (data) => {
     // Adicionar o novo saldo ao estado saldos
-    setSaldos((prevSaldos) => [...prevSaldos, data]);
+    const newSaldo = { ...data, id: nextId };
+    setSaldos((prevSaldos) => [...prevSaldos, newSaldo]);
+
+    // Atualizar o nextId apenas se o novo item for adicionado
+    if (newSaldo.id === nextId) {
+      setNextId(nextId + 1);
+    }
 
     setShowForm(false);
     alert("Registro adicionado");
@@ -101,17 +107,10 @@ const Saldos = () => {
           <IconButton
             color="secondary"
             aria-label="Excluir"
-            onClick={handleRemove}
+            onClick={() => handleRemove(params.row.id)}
           >
             <DeleteIcon />
           </IconButton>
-          <DeleteModal
-            open={openModal}
-            onClose={handleToggleOpenModal}
-            onConfirm={() => handleConfirmModal(params.row.id)}
-            title="Excluir Pedido?"
-            message="Se excluir este pedido, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
-          />
         </>
       ),
     },
@@ -143,6 +142,7 @@ const Saldos = () => {
             pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
+            rowId="id"
           />
           <Button
             variant="contained"
@@ -151,6 +151,14 @@ const Saldos = () => {
           >
             Criar Novo Saldo
           </Button>
+          <DeleteModal
+            color="warning"
+            open={openModal}
+            onClose={handleToggleOpenModal}
+            onConfirm={handleConfirmModal}
+            title="Excluir Pedido?"
+            message="Se excluir este pedido, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
+          />
         </Box>
       )}
     </>

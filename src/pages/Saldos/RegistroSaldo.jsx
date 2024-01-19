@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { TextField, Button } from "@mui/material";
+//import Toasty from "../../components/Toasty";
 
 import styles from "./registroSaldo.module.css";
 import useAuth from "../../state/auth";
@@ -13,8 +14,8 @@ const RegistroSaldo = () => {
   const nameRef = useRef(null);
   const valueRef = useRef(null);
 
-  const [nameError, setNameError] = React.useState(false);
-  const [valueError, setValueError] = React.useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [valueError, setValueError] = useState(false);
 
   const handleRegisterButton = () => {
     let hasError = false;
