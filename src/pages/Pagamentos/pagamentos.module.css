@@ -17,8 +17,7 @@
   width: 200px;
 }
 
-.lastBtn {
-  border-radius: 50px;
-  width: 100px;
-  align-items: flex-end;
+.btnCreate {
+  margin-top: 30px;
+  color: red;
 }

@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   });
 
   const [saldos, setSaldos] = useState([]);
-
+  const [pagamentos, setPagamentos] = useState([]);
   const [nextId, setNextId] = useState(1);
 
   const contextValue = {
@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
     setSaldos,
     nextId,
     setNextId,
+    pagamentos,
+    setPagamentos,
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -64,6 +64,10 @@ const Saldos = () => {
     alert("Registro adicionado");
   };
 
+  const handleCreateButton = () => {
+    navigate("/saldos/add");
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "nome", headerName: "Nome", width: 250 },
@@ -116,10 +120,6 @@ const Saldos = () => {
     },
   ];
 
-  const handleButton = () => {
-    navigate("/saldos/add");
-  };
-
   return (
     <>
       {saldos.length === 0 ? (
@@ -128,8 +128,8 @@ const Saldos = () => {
           {showForm ? (
             <RegistroSaldo onRegister={handleRegister} />
           ) : (
-            <Button variant="contained" onClick={handleButton}>
-              Criar Novo Saldo
+            <Button variant="contained" onClick={handleCreateButton}>
+              Criar Saldo
             </Button>
           )}
         </div>
@@ -146,7 +146,7 @@ const Saldos = () => {
           />
           <Button
             variant="contained"
-            onClick={handleButton}
+            onClick={handleCreateButton}
             className={styles.btnCreate}
           >
             Criar Novo Saldo

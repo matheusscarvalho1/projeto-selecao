@@ -48,8 +48,8 @@ const RegistroSaldo = () => {
       nome: nameRef.current.value,
       descricao: "",
       valorInicial: parseFloat(valueRef.current.value),
-      valorUtilizado: 0,
-      valorRestante: parseFloat(valueRef.current.value),
+      valorUtilizado: parseFloat(valueRef.current.value),
+      valorRestante: 0,
     };
 
     setSaldos((prevSaldos) => [...prevSaldos, novoSaldo]);

@@ -5,12 +5,14 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import useAuth from "../../state/auth";
 
 import styles from "./registroPagamento.module.css";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [age, setAge] = useState("");
+  const { setPagamentos, nextId, setNextId } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef(null);
@@ -65,7 +67,23 @@ const Register = () => {
     if (hasError) {
       return;
     }
-    alert("Ok!");
+
+    const novoPagamento = {
+      id: nextId,
+      nome: nameRef.current.value,
+      descricao: descriptionRef.current.value,
+      valor: parseFloat(valueRef.current.value),
+    };
+    console.log(novoPagamento);
+
+    setPagamentos((prevPagamentos) => [...prevPagamentos, novoPagamento]);
+    setNextId((prevId) => prevId + 1);
+
+    nameRef.current.value = "";
+    descriptionRef.current.value = "";
+    valueRef.current.value = "";
+
+    navigate("/pagamentos");
   };
 
   const handleBackButton = () => {
