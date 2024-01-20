@@ -10,13 +10,26 @@
 .table {
   min-height: 400;
   width: 100%;
+  padding: 50px;
 }
 
 .btn {
   border-radius: 3.125rem;
   width: 12.5rem;
+  color: white !important;
+  border-radius: 2rem !important;
 }
 
 .btnCreate {
   margin-top: 2rem;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title div h2 {
+  font-weight: lighter;
 }

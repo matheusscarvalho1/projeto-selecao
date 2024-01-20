@@ -145,13 +145,31 @@ const Saldos = () => {
           {showForm ? (
             <RegistroSaldo onRegister={handleRegister} />
           ) : (
-            <Button variant="contained" onClick={handleCreateButton}>
+            <Button
+              color="blue"
+              variant="contained"
+              className={styles.btn}
+              onClick={handleCreateButton}
+            >
               Criar Saldo
             </Button>
           )}
         </div>
       ) : (
         <Box className={styles.table}>
+          <div className={styles.title}>
+            <div>
+              <h2>Registre aqui seus saldos</h2>
+            </div>
+            <Button
+              color="blue"
+              variant="contained"
+              onClick={handleCreateButton}
+              className={styles.btnCreate}
+            >
+              Criar Novo Saldo
+            </Button>
+          </div>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -161,15 +179,9 @@ const Saldos = () => {
             disableRowSelectionOnClick
             rowId="id"
           />
-          <Button
-            variant="contained"
-            onClick={handleCreateButton}
-            className={styles.btnCreate}
-          >
-            Criar Novo Saldo
-          </Button>
+
           <DeleteModal
-            color="warning"
+            color="red"
             open={openModal}
             onClose={handleToggleOpenModal}
             onConfirm={handleConfirmModal}

@@ -92,12 +92,12 @@ const RegistroSaldo = () => {
       <div className={styles.btns}>
         <Button
           variant="outlined"
-          color="primary"
+          color="blue"
           onClick={() => navigate("/saldos")}
         >
           Voltar
         </Button>
-        <Button variant="contained" onClick={handleRegisterButton}>
+        <Button color="blue" variant="contained" onClick={handleRegisterButton}>
           Cadastrar
         </Button>
       </div>

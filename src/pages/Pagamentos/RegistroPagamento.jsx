@@ -182,10 +182,10 @@ const RegistroPagamento = () => {
         </div>
       </div>
       <div className={styles.btns}>
-        <Button variant="contained" onClick={handleBackButton}>
+        <Button color="blue" variant="outlined" onClick={handleBackButton}>
           Voltar
         </Button>
-        <Button variant="contained" onClick={handleRegisterButton}>
+        <Button color="blue" variant="contained" onClick={handleRegisterButton}>
           Registrar Pagamento
         </Button>
       </div>

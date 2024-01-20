@@ -10,12 +10,14 @@
 
 .input {
   width: 100%;
+  gap: 2rem;
 }
 
 .btns {
   display: flex;
   justify-content: space-between;
   margin-top: 1.25rem;
+  color: white !important;
 }
 
 .subTitle {

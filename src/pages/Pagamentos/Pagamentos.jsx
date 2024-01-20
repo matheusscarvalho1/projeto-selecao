@@ -139,6 +139,7 @@ const Pagamentos = () => {
             <RegistroPagamento onRegister={handleRegister} />
           ) : (
             <Button
+              color="blue"
               variant="contained"
               className={styles.btn}
               onClick={handleCreateButton}
@@ -149,6 +150,19 @@ const Pagamentos = () => {
         </div>
       ) : (
         <Box className={styles.table}>
+          <div className={styles.title}>
+            <div>
+              <h2>Registre aqui seus pagamentos</h2>
+            </div>
+            <Button
+              color="blue"
+              variant="contained"
+              onClick={handleCreateButton}
+              className={styles.btnCreate}
+            >
+              Criar Novo Saldo
+            </Button>
+          </div>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -163,15 +177,9 @@ const Pagamentos = () => {
             checkboxSelection
             disableRowSelectionOnClick
           />
-          <Button
-            variant="contained"
-            className={styles.btnCreate}
-            onClick={handleCreateButton}
-          >
-            Criar novo pedido
-          </Button>
+
           <DeleteModal
-            color="warning"
+            color="red"
             open={openModal}
             onClose={handleToggleOpenModal}
             onConfirm={handleConfirmModal}
