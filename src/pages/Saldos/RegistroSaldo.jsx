@@ -1,10 +1,8 @@
+// RegistroSaldo.jsx
 import React, { useState, useRef } from "react";
 import { TextField, Button } from "@mui/material";
-//import Toasty from "../../components/Toasty";
-
 import styles from "./registroSaldo.module.css";
 import useAuth from "../../state/auth";
-
 import { useNavigate } from "react-router-dom";
 
 const RegistroSaldo = () => {
@@ -48,8 +46,8 @@ const RegistroSaldo = () => {
       nome: nameRef.current.value,
       descricao: "",
       valorInicial: parseFloat(valueRef.current.value),
-      valorUtilizado: parseFloat(valueRef.current.value),
-      valorRestante: 0,
+      valorUtilizado: 0,
+      valorRestante: parseFloat(valueRef.current.value),
     };
 
     setSaldos((prevSaldos) => [...prevSaldos, novoSaldo]);

@@ -13,15 +13,32 @@ import useAuth from "../../state/auth";
 const Saldos = () => {
   const navigate = useNavigate();
 
-  const { saldos, setSaldos, nextId, setNextId } = useAuth();
+  const { saldos, setSaldos, nextId, setNextId, pagamentos } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
-    setRows([...saldos]);
-  }, [saldos]);
+    const updatedSaldos = saldos.map((saldo) => {
+      const pagamentosDoSaldo = pagamentos.filter(
+        (pagamento) => pagamento.saldoId === saldo.id
+      );
+
+      const valorUtilizado = pagamentosDoSaldo.reduce(
+        (total, pagamento) => total + pagamento.valor,
+        0
+      );
+
+      return {
+        ...saldo,
+        valorUtilizado,
+        valorRestante: saldo.valorInicial - valorUtilizado,
+      };
+    });
+
+    setRows(updatedSaldos);
+  }, [saldos, pagamentos]);
 
   const handleEdit = (id) => {
     navigate(`/saldos/edit/${id}`);

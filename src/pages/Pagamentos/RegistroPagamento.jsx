@@ -1,18 +1,13 @@
-import { useState, useRef } from "react";
+// RegistroPagamento.jsx
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { MenuItem } from "@mui/material";
+import styles from "./registroPagamento.module.css";
 import useAuth from "../../state/auth";
 
-import styles from "./registroPagamento.module.css";
-import { useNavigate } from "react-router-dom";
-
-const Register = () => {
-  const [age, setAge] = useState("");
-  const { setPagamentos, nextId, setNextId } = useAuth();
+const RegistroPagamento = () => {
+  const { saldos, setPagamentos, setSaldos, nextId, setNextId } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef(null);
@@ -24,10 +19,6 @@ const Register = () => {
   const [descriptionError, setDescriptionError] = useState(false);
   const [valueError, setValueError] = useState(false);
   const [saldoError, setSaldoError] = useState(false);
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   const handleRegisterButton = () => {
     let hasError = false;
@@ -68,21 +59,58 @@ const Register = () => {
       return;
     }
 
-    const novoPagamento = {
+    const selectedSaldo = saldos.find(
+      (saldo) => saldo.id === parseInt(saldoRef.current.value, 10)
+    );
+
+    if (!selectedSaldo) {
+      // Handle case where selected saldo is not found
+      return;
+    }
+
+    // Verificar se o valor do pagamento não ultrapassa o saldo disponível
+    const valorPagamento = parseFloat(valueRef.current.value);
+    if (valorPagamento > selectedSaldo.valorRestante) {
+      alert("O valor do pagamento ultrapassa o saldo disponível.");
+      console.log(
+        `O valor do pagamento é ${valorPagamento} e o saldo disponível é ${selectedSaldo.valorRestante}.`
+      );
+      return;
+    }
+
+    const newPagamento = {
       id: nextId,
       nome: nameRef.current.value,
       descricao: descriptionRef.current.value,
-      valor: parseFloat(valueRef.current.value),
+      valor: valorPagamento,
+      saldoId: parseInt(saldoRef.current.value, 10),
     };
-    console.log(novoPagamento);
 
-    setPagamentos((prevPagamentos) => [...prevPagamentos, novoPagamento]);
-    setNextId((prevId) => prevId + 1);
+    // Atualizar o saldo
+    const saldoAtualizado = {
+      ...selectedSaldo,
+      valorUtilizado: selectedSaldo.valorUtilizado + valorPagamento,
+      valorRestante: selectedSaldo.valorRestante - valorPagamento,
+    };
 
-    nameRef.current.value = "";
-    descriptionRef.current.value = "";
-    valueRef.current.value = "";
+    // Atualizar a lista de saldos
+    const saldosAtualizados = saldos.map((saldo) =>
+      saldo.id === selectedSaldo.id ? saldoAtualizado : saldo
+    );
 
+    // Atualizar o estado dos saldos
+    setSaldos(saldosAtualizados);
+    console.log("Saldos Atualizados:", saldosAtualizados);
+
+    // Adicionar o novo pagamento ao estado de pagamentos
+    setPagamentos((prevPagamentos) => [...prevPagamentos, newPagamento]);
+
+    // Atualizar o próximo ID apenas se o novo item for adicionado
+    if (newPagamento.id === nextId) {
+      setNextId(nextId + 1);
+    }
+
+    // Redirecionar para a página de pagamentos
     navigate("/pagamentos");
   };
 
@@ -92,76 +120,77 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.subTitle}>Criar pedido</h1>
+      <h2 className={styles.subTitle}>Registrar</h2>
       <div className={styles.inputWrapper}>
         <div>
           <TextField
-            id="outlined-basic"
             label="Nome"
             variant="outlined"
             inputRef={nameRef}
             error={nameError}
-            helperText={nameError && "Digite o campo 'Nome' corretamente."}
             className={styles.input}
+            helperText={nameError && "Por favor, preencha o nome."}
           />
         </div>
+
         <div>
           <TextField
-            id="outlined-basic"
             label="Descrição"
             variant="outlined"
             inputRef={descriptionRef}
             error={descriptionError}
-            helperText={
-              descriptionError && "Digite o campo 'Descrição' corretamente."
-            }
             className={styles.input}
+            helperText={descriptionError && "Por favor, preencha a descrição."}
           />
         </div>
         <div>
           <TextField
-            id="outlined-basic"
             label="Valor"
             variant="outlined"
             inputRef={valueRef}
             error={valueError}
-            helperText={valueError && "Digite o campo 'Valor' corretamente."}
             className={styles.input}
+            helperText={
+              valueError &&
+              "Por favor, preencha um valor válido para o pagamento."
+            }
+            InputProps={{
+              startAdornment: <span>R$ </span>,
+            }}
           />
         </div>
         <div>
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Selecione o saldo a utilizar
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                inputRef={saldoRef}
-                error={saldoError}
-                label="Selecione o saldo a utilizar"
-                onChange={handleChange}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+          <TextField
+            select
+            label="Saldo"
+            variant="outlined"
+            inputRef={saldoRef}
+            error={saldoError}
+            className={styles.input}
+            helperText={saldoError && "Por favor, selecione um saldo."}
+          >
+            <MenuItem value="">
+              <em>Selecione um saldo</em>
+            </MenuItem>
+            {saldos.map((saldo) => (
+              <MenuItem key={saldo.id} value={saldo.id}>
+                {saldo.nome} (R$ {saldo.valorInicial.toFixed(2)}) - Disponível:
+                R$ {saldo.valorRestante.toFixed(2)}
+              </MenuItem>
+            ))}
+          </TextField>
         </div>
       </div>
-
-      <div class={styles.btns}>
-        <Button variant="outlined" color="primary" onClick={handleBackButton}>
+      <div className={styles.btns}>
+        <Button variant="contained" onClick={handleBackButton}>
           Voltar
         </Button>
         <Button variant="contained" onClick={handleRegisterButton}>
-          Cadastrar
+          Registrar Pagamento
         </Button>
       </div>
     </div>
   );
 };
-export default Register;
+
+export default RegistroPagamento;

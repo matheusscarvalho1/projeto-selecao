@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const EditPagamento = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { pagamentos, setPagamentos, editPayment } = useAuth();
+  const { saldos, pagamentos, setPagamentos, editPayment } = useAuth();
 
   const nameRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -24,20 +24,15 @@ const EditPagamento = () => {
   const [valueError, setValueError] = useState(false);
   const [saldoError, setSaldoError] = useState(false);
 
-  const [age, setAge] = useState("");
-
   useEffect(() => {
     if (editPayment && editPayment.id.toString() === id) {
       nameRef.current.value = editPayment.nome;
       descriptionRef.current.value = editPayment.descricao;
       valueRef.current.value = editPayment.valor.toString();
-      setAge(/* Algo relacionado ao pagamento, se necessário */);
+      // Define o valor do saldo para o ID do saldo vinculado ao pagamento
+      saldoRef.current.value = editPayment.saldoId;
     }
-  }, [editPayment, id]);
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+  }, [editPayment, id, saldos]);
 
   const handleRegisterButton = () => {
     let hasError = false;
@@ -82,6 +77,7 @@ const EditPagamento = () => {
             nome: nameRef.current.value,
             descricao: descriptionRef.current.value,
             valor: parseFloat(valueRef.current.value),
+            saldoId: parseInt(saldoRef.current.value, 10), // Atualiza o ID do saldo vinculado
           }
         : pagamento
     );
@@ -141,21 +137,25 @@ const EditPagamento = () => {
         <div>
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id="select-saldo-label">
                 Selecione o saldo a utilizar
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
+                labelId="select-saldo-label"
+                id="select-saldo"
+                value={saldoRef.current ? saldoRef.current.value : ""}
                 inputRef={saldoRef}
                 error={saldoError}
                 label="Selecione o saldo a utilizar"
-                onChange={handleChange}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value="" disabled>
+                  Selecione um saldo
+                </MenuItem>
+                {saldos.map((saldo) => (
+                  <MenuItem key={saldo.id} value={saldo.id}>
+                    {saldo.nome}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
