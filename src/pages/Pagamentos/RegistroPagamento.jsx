@@ -104,7 +104,8 @@ const RegistroPagamento = () => {
     if (newPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
-
+    setOpenToasty(true);
+    Toasty({ severity: "success", message: "Cadastrado com sucesso." });
     navigate("/pagamentos");
 
     // Exibir o toasty de sucesso
@@ -117,7 +118,7 @@ const RegistroPagamento = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.subTitle}>Registrar</h2>
+      <h2 className={styles.subTitle}>Criar pagamento</h2>
       <div className={styles.inputWrapper}>
         <div>
           <TextField
