@@ -21,9 +21,6 @@ const RegistroSaldo = ({ onRegister }) => {
   const [descriptionError, setDescriptionError] = useState(false);
   const [toastyOpen, setToastyOpen] = useState(false);
 
-  // Estado para armazenar a descrição do saldo
-  const [descricaoSaldo, setDescricaoSaldo] = useState("");
-
   // Função para lidar com o botão de cadastrar
   const handleRegisterButton = () => {
     // Flag para indicar se há erros nos campos
@@ -37,19 +34,19 @@ const RegistroSaldo = ({ onRegister }) => {
       setNameError(false);
     }
 
+    if (!descriptionRef.current.value) {
+      hasError = true;
+      setDescriptionError(true);
+    } else {
+      setDescriptionError(false);
+    }
+
     // Validação do formulário
     if (!valueRef.current.value || isNaN(valueRef.current.value)) {
       hasError = true;
       setValueError(true);
     } else {
       setValueError(false);
-    }
-
-    if (!descricaoSaldo) {
-      hasError = true;
-      setDescriptionError(true);
-    } else {
-      setDescriptionError(false);
     }
 
     // Interromper a execução caso tenha erros
@@ -61,7 +58,7 @@ const RegistroSaldo = ({ onRegister }) => {
     const novoSaldo = {
       id: nextId,
       nome: nameRef.current.value,
-      descricao: descricaoSaldo,
+      descricao: descriptionRef.current.value,
       valorInicial: parseFloat(valueRef.current.value),
       valorUtilizado: 0,
       valorRestante: parseFloat(valueRef.current.value),
@@ -124,7 +121,6 @@ const RegistroSaldo = ({ onRegister }) => {
               descriptionError && "Digite o campo 'Descrição' corretamente."
             }
             className={styles.input}
-            onChange={(e) => setDescricaoSaldo(e.target.value)}
           />
         </div>
         <div>
