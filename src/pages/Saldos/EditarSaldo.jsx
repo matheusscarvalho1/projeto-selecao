@@ -12,9 +12,11 @@ const EditSaldo = () => {
   const [saldo, setSaldo] = useState(null);
   const nameRef = useRef(null);
   const valueRef = useRef(null);
+  const descriptionRef = useRef(null); // Adição: referência para o campo de descrição
 
   const [nameError, setNameError] = useState(false);
   const [valueError, setValueError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false); // Adição: estado para erro de descrição
 
   useEffect(() => {
     const saldoToUpdate = saldos.find((saldo) => saldo.id.toString() === id);
@@ -23,6 +25,7 @@ const EditSaldo = () => {
       setSaldo(saldoToUpdate);
       nameRef.current.value = saldoToUpdate.nome;
       valueRef.current.value = saldoToUpdate.valorInicial.toString();
+      descriptionRef.current.value = saldoToUpdate.descricao || ""; // Adição: definir descrição se existir
     } else {
       // Handle case where saldo with given id is not found
       navigate("/saldos");
@@ -51,6 +54,14 @@ const EditSaldo = () => {
       setValueError(true);
     }
 
+    // Adição: Verificar se há erro na descrição
+    if (descriptionRef.current.value.length > 100) {
+      hasError = true;
+      setDescriptionError(true);
+    } else {
+      setDescriptionError(false);
+    }
+
     if (hasError) {
       return;
     }
@@ -61,6 +72,7 @@ const EditSaldo = () => {
             ...s,
             nome: nameRef.current.value,
             valorInicial: parseFloat(valueRef.current.value),
+            descricao: descriptionRef.current.value, // Adição: incluir descrição
             valorUtilizado: parseFloat(valueRef.current.value),
             valorRestante: 0,
           }
@@ -88,6 +100,21 @@ const EditSaldo = () => {
             inputRef={nameRef}
             error={nameError}
             helperText={nameError && "Digite o campo 'Nome' corretamente."}
+            className={styles.input}
+          />
+        </div>
+
+        <div>
+          <TextField
+            id="outlined-basic"
+            label="Descrição"
+            variant="outlined"
+            inputRef={descriptionRef}
+            error={descriptionError}
+            helperText={
+              descriptionError &&
+              "A descrição não pode ter mais de 100 caracteres."
+            }
             className={styles.input}
           />
         </div>

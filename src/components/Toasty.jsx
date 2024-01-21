@@ -1,41 +1,31 @@
 import StarIcon from "@mui/icons-material/Star";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
-import { Alert, Box, Button, IconButton } from "@mui/material";
+const Toasty = ({ open, severity, onClose, message }) => {
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+    onClose();
+  };
 
-const Toasty = () => {
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
-    >
-      <Alert
-        variant="soft"
-        color="inherit"
-        startDecorator={<StarIcon />}
-        endDecorator={
-          <Button size="sm" variant="solid" color="inherit">
-            Close
-          </Button>
-        }
-      >
-        Your message was sent successfully.
-      </Alert>
-      <Alert
-        variant="outlined"
-        color="neutral"
-        startDecorator={<AccountCircleRoundedIcon />}
-        endDecorator={
-          <IconButton variant="plain" size="sm" color="neutral">
-            <CloseRoundedIcon />
-          </IconButton>
-        }
-      >
-        Your account was updated.
-      </Alert>
-    </Box>
+    <>
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          elevation={6}
+          severity={severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+          icon={severity === "success" ? <StarIcon fontSize="inherit" /> : null}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
-
 export default Toasty;

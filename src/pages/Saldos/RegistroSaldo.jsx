@@ -1,19 +1,22 @@
-// RegistroSaldo.jsx
 import React, { useState, useRef } from "react";
 import { TextField, Button } from "@mui/material";
 import styles from "./registroSaldo.module.css";
 import useAuth from "../../state/auth";
 import { useNavigate } from "react-router-dom";
 
-const RegistroSaldo = () => {
+const RegistroSaldo = ({ onRegister }) => {
   const { setSaldos, nextId, setNextId } = useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef(null);
   const valueRef = useRef(null);
+  const descriptionRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
   const [valueError, setValueError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
+
+  const [descricaoSaldo, setDescricaoSaldo] = useState("");
 
   const handleRegisterButton = () => {
     let hasError = false;
@@ -25,16 +28,18 @@ const RegistroSaldo = () => {
       setNameError(false);
     }
 
-    if (!valueRef.current.value) {
+    if (!valueRef.current.value || isNaN(valueRef.current.value)) {
       hasError = true;
       setValueError(true);
     } else {
       setValueError(false);
     }
 
-    if (isNaN(valueRef.current.value)) {
+    if (!descricaoSaldo) {
       hasError = true;
-      setValueError(true);
+      setDescriptionError(true);
+    } else {
+      setDescriptionError(false);
     }
 
     if (hasError) {
@@ -44,7 +49,7 @@ const RegistroSaldo = () => {
     const novoSaldo = {
       id: nextId,
       nome: nameRef.current.value,
-      descricao: "",
+      descricao: descricaoSaldo,
       valorInicial: parseFloat(valueRef.current.value),
       valorUtilizado: 0,
       valorRestante: parseFloat(valueRef.current.value),
@@ -55,6 +60,11 @@ const RegistroSaldo = () => {
 
     nameRef.current.value = "";
     valueRef.current.value = "";
+    descriptionRef.current.value = "";
+
+    if (typeof onRegister === "function") {
+      onRegister(novoSaldo);
+    }
 
     navigate("/saldos");
   };
@@ -72,6 +82,20 @@ const RegistroSaldo = () => {
             error={nameError}
             helperText={nameError && "Digite o campo 'Nome' corretamente."}
             className={styles.input}
+          />
+        </div>
+        <div>
+          <TextField
+            id="outlined-basic"
+            label="Descrição"
+            variant="outlined"
+            inputRef={descriptionRef}
+            error={descriptionError}
+            helperText={
+              descriptionError && "Digite o campo 'Descrição' corretamente."
+            }
+            className={styles.input}
+            onChange={(e) => setDescricaoSaldo(e.target.value)}
           />
         </div>
         <div>

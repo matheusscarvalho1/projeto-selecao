@@ -1,20 +1,17 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RegistroSaldo from "./RegistroSaldo";
+
 import styles from "./saldos.module.css";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../../components/Modal";
-
 import useAuth from "../../state/auth";
 
 const Saldos = () => {
   const navigate = useNavigate();
-
-  const { saldos, setSaldos, nextId, setNextId, pagamentos } = useAuth();
-  const [showForm, setShowForm] = useState(false);
+  const { saldos, setSaldos, pagamentos } = useAuth();
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
@@ -34,9 +31,7 @@ const Saldos = () => {
         ...saldo,
         valorUtilizado,
         valorRestante: saldo.valorInicial - valorUtilizado,
-        descricaoPagamento: pagamentosDoSaldo
-          .map((pagamento) => pagamento.descricao)
-          .join(", "),
+        descricao: saldo.descricao,
       };
     });
 
@@ -56,7 +51,6 @@ const Saldos = () => {
     if (idToDelete !== null) {
       const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
 
-      // Reordenar os IDs
       const updatedSaldosWithNewIds = updatedSaldos.map((saldo, index) => ({
         ...saldo,
         id: index + 1,
@@ -75,20 +69,6 @@ const Saldos = () => {
     }
   };
 
-  const handleRegister = (data) => {
-    // Adicionar o novo saldo ao estado saldos
-    const newSaldo = { ...data, id: nextId };
-    setSaldos((prevSaldos) => [...prevSaldos, newSaldo]);
-
-    // Atualizar o nextId apenas se o novo item for adicionado
-    if (newSaldo.id === nextId) {
-      setNextId(nextId + 1);
-    }
-
-    setShowForm(false);
-    alert("Registro adicionado");
-  };
-
   const handleCreateButton = () => {
     navigate("/saldos/add");
   };
@@ -97,7 +77,7 @@ const Saldos = () => {
     { field: "id", headerName: "ID", width: 90 },
     { field: "nome", headerName: "Nome", width: 250 },
     {
-      field: "descricaoPagamento",
+      field: "descricao",
       headerName: "Descrição",
       width: 250,
       renderCell: (params) => <span>{params.value}</span>,
@@ -155,18 +135,14 @@ const Saldos = () => {
       {saldos.length === 0 ? (
         <div className={styles.box}>
           <p>Você não possui saldos.</p>
-          {showForm ? (
-            <RegistroSaldo onRegister={handleRegister} />
-          ) : (
-            <Button
-              color="blue"
-              variant="contained"
-              className={styles.btn}
-              onClick={handleCreateButton}
-            >
-              Criar Saldo
-            </Button>
-          )}
+          <Button
+            color="blue"
+            variant="contained"
+            className={styles.btn}
+            onClick={handleCreateButton}
+          >
+            Criar Saldo
+          </Button>
         </div>
       ) : (
         <Box className={styles.table}>

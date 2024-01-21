@@ -34,11 +34,6 @@ const Pagamentos = () => {
     navigate(`/pagamentos/edit/${id}`);
   };
 
-  const handleToggleOpenModal = (id) => {
-    setIdToDelete(id);
-    setOpenModal(!openModal);
-  };
-
   const handleConfirmModal = () => {
     if (idToDelete !== null) {
       const updatedPagamentos = pagamentos.filter(
@@ -60,12 +55,19 @@ const Pagamentos = () => {
     }
   };
 
+  const handleToggleOpenModal = (id) => {
+    setIdToDelete(id);
+    setOpenModal(!openModal);
+  };
+
   const handleDelete = (id) => {
-    const pagamentoToDelete = pagamentos.find(
-      (pagamento) => pagamento.id === id
-    );
-    if (pagamentoToDelete) {
-      handleToggleOpenModal(id);
+    if (pagamentos && pagamentos.length > 0) {
+      const pagamentoToDelete = pagamentos.find(
+        (pagamento) => pagamento.id === id
+      );
+      if (pagamentoToDelete) {
+        handleToggleOpenModal(id);
+      }
     }
   };
 

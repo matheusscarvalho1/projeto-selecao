@@ -22,12 +22,14 @@
 
 .btnCreate {
   margin-top: 2rem;
+  color: white !important;
 }
 
 .title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .title div h2 {

@@ -1,10 +1,10 @@
-// RegistroPagamento.jsx
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import styles from "./registroPagamento.module.css";
 import useAuth from "../../state/auth";
+import Toasty from "../../components/Toasty";
 
 const RegistroPagamento = () => {
   const { saldos, setPagamentos, setSaldos, nextId, setNextId } = useAuth();
@@ -16,6 +16,7 @@ const RegistroPagamento = () => {
   const saldoRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
+  const [openToasty, setOpenToasty] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [valueError, setValueError] = useState(false);
   const [saldoError, setSaldoError] = useState(false);
@@ -29,6 +30,7 @@ const RegistroPagamento = () => {
     } else {
       setNameError(false);
     }
+
     if (!descriptionRef.current.value) {
       hasError = true;
       setDescriptionError(true);
@@ -50,7 +52,9 @@ const RegistroPagamento = () => {
       setSaldoError(false);
     }
 
-    if (isNaN(valueRef.current.value)) {
+    // Verificar se o valor é um número válido e maior que zero
+    const parsedValue = parseFloat(valueRef.current.value);
+    if (isNaN(parsedValue) || parsedValue <= 0) {
       hasError = true;
       setValueError(true);
     }
@@ -64,17 +68,14 @@ const RegistroPagamento = () => {
     );
 
     if (!selectedSaldo) {
-      // Handle case where selected saldo is not found
+      Toasty({ severity: "error", message: "Saldo não encontrado." });
       return;
     }
 
-    // Verificar se o valor do pagamento não ultrapassa o saldo disponível
-    const valorPagamento = parseFloat(valueRef.current.value);
+    const valorPagamento = parsedValue;
+
     if (valorPagamento > selectedSaldo.valorRestante) {
-      alert("O valor do pagamento ultrapassa o saldo disponível.");
-      console.log(
-        `O valor do pagamento é ${valorPagamento} e o saldo disponível é ${selectedSaldo.valorRestante}.`
-      );
+      setOpenToasty(true);
       return;
     }
 
@@ -86,32 +87,28 @@ const RegistroPagamento = () => {
       saldoId: parseInt(saldoRef.current.value, 10),
     };
 
-    // Atualizar o saldo
     const saldoAtualizado = {
       ...selectedSaldo,
       valorUtilizado: selectedSaldo.valorUtilizado + valorPagamento,
       valorRestante: selectedSaldo.valorRestante - valorPagamento,
     };
 
-    // Atualizar a lista de saldos
     const saldosAtualizados = saldos.map((saldo) =>
       saldo.id === selectedSaldo.id ? saldoAtualizado : saldo
     );
 
-    // Atualizar o estado dos saldos
     setSaldos(saldosAtualizados);
-    console.log("Saldos Atualizados:", saldosAtualizados);
 
-    // Adicionar o novo pagamento ao estado de pagamentos
     setPagamentos((prevPagamentos) => [...prevPagamentos, newPagamento]);
 
-    // Atualizar o próximo ID apenas se o novo item for adicionado
     if (newPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
 
-    // Redirecionar para a página de pagamentos
     navigate("/pagamentos");
+
+    // Exibir o toasty de sucesso
+    setOpenToasty(true);
   };
 
   const handleBackButton = () => {
@@ -143,6 +140,7 @@ const RegistroPagamento = () => {
             helperText={descriptionError && "Por favor, preencha a descrição."}
           />
         </div>
+
         <div>
           <TextField
             label="Valor"
@@ -152,13 +150,14 @@ const RegistroPagamento = () => {
             className={styles.input}
             helperText={
               valueError &&
-              "Por favor, preencha um valor válido para o pagamento."
+              "Por favor, preencha um valor válido maior que zero para o pagamento."
             }
             InputProps={{
               startAdornment: <span>R$ </span>,
             }}
           />
         </div>
+
         <div>
           <TextField
             select
@@ -181,6 +180,7 @@ const RegistroPagamento = () => {
           </TextField>
         </div>
       </div>
+
       <div className={styles.btns}>
         <Button color="blue" variant="outlined" onClick={handleBackButton}>
           Voltar
@@ -189,6 +189,16 @@ const RegistroPagamento = () => {
           Registrar Pagamento
         </Button>
       </div>
+
+      {/* Renderizar o Toasty apenas quando openToasty for verdadeiro */}
+      {openToasty && (
+        <Toasty
+          open={openToasty}
+          severity="error"
+          onClose={() => setOpenToasty(false)}
+          message="O valor do pagamento ultrapassa o saldo disponível."
+        />
+      )}
     </div>
   );
 };
