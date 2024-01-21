@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Dialog,
@@ -9,45 +10,38 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Modal = ({ open, onClose, onConfirm, title, message }) => {
+const Modal = ({ open, onConfirm, onClose, title, message }) => {
   return (
-    <>
-      <Dialog
-        open={open}
-        onClose={onClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle
+        sx={{ display: "flex", alignItems: "center", gap: "1.5rem" }}
       >
-        <DialogTitle
-          id="alert-dialog-title"
-          color="warning"
-          sx={{ display: "flex", alignItems: "center", gap: "5px" }}
+        <DeleteIcon color="red" />
+        {title}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          sx={{ color: "black", fontSize: "1rem", lineHeight: "24px" }}
         >
-          <DeleteIcon color="warning" />
-          {title}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description" color="inherit">
-            {message}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          {message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button variant="outlined" onClick={onClose} color="blue">
+          Cancelar
+        </Button>
+        <Button
+          variant="contained"
+          onClick={onConfirm}
+          color="red"
+          sx={{ color: "white" }}
+          autoFocus
         >
-          <Button variant="outlined" onClick={onClose} color="normal">
-            Cancelar
-          </Button>
-          <Button
-            variant="contained"
-            onClick={onConfirm}
-            color="warning"
-            autoFocus
-          >
-            Excluir
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+          Excluir
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
+
 export default Modal;

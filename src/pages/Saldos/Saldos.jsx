@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-import styles from "./saldos.module.css";
-import { useNavigate } from "react-router-dom";
 import DeleteModal from "../../components/Modal";
 import useAuth from "../../state/auth";
+
+import styles from "./saldos.module.css";
 
 const Saldos = () => {
   const navigate = useNavigate();

@@ -79,7 +79,7 @@ const RegistroPagamento = () => {
       return;
     }
 
-    const newPagamento = {
+    const novoPagamento = {
       id: nextId,
       nome: nameRef.current.value,
       descricao: descriptionRef.current.value,
@@ -99,9 +99,9 @@ const RegistroPagamento = () => {
 
     setSaldos(saldosAtualizados);
 
-    setPagamentos((prevPagamentos) => [...prevPagamentos, newPagamento]);
+    setPagamentos((prevPagamentos) => [...prevPagamentos, novoPagamento]);
 
-    if (newPagamento.id === nextId) {
+    if (novoPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
     setOpenToasty(true);
