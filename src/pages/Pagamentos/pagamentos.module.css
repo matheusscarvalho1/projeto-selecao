@@ -29,9 +29,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 .title div h2 {
-  margin-bottom: 1.25rem;
   font-weight: lighter;
 }
