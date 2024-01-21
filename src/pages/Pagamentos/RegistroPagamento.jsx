@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { MenuItem } from "@mui/material";
@@ -115,6 +115,17 @@ const RegistroPagamento = () => {
     navigate("/pagamentos");
   };
 
+  // Redirecionar após alguns segundos e fechar o toasty
+  useEffect(() => {
+    if (openToasty) {
+      const timeout = setTimeout(() => {
+        navigate("/pagamentos");
+        setOpenToasty(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [openToasty, navigate]);
+
   return (
     <div className={styles.container}>
       <h2 className={styles.subTitle}>Registrar</h2>
@@ -194,9 +205,9 @@ const RegistroPagamento = () => {
       {openToasty && (
         <Toasty
           open={openToasty}
-          severity="error"
+          severity="success"
           onClose={() => setOpenToasty(false)}
-          message="O valor do pagamento ultrapassa o saldo disponível."
+          message="Pagamento registrado com sucesso!"
         />
       )}
     </div>
