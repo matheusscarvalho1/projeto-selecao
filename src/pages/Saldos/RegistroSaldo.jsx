@@ -92,7 +92,7 @@ const RegistroSaldo = () => {
       <div className={styles.btns}>
         <Button
           variant="outlined"
-          color="blue"
+          color="primary"
           onClick={() => navigate("/saldos")}
         >
           Voltar

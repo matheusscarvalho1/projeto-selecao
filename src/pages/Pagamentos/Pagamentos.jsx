@@ -40,26 +40,33 @@ const Pagamentos = () => {
   };
 
   const handleConfirmModal = () => {
-    const updatedPagamentos = pagamentos.filter(
-      (pagamento) => pagamento.id !== idToDelete
-    );
+    if (idToDelete !== null) {
+      const updatedPagamentos = pagamentos.filter(
+        (pagamento) => pagamento.id !== idToDelete
+      );
 
-    // Reordenar os IDs
-    const updatedPagamentosWithNewIds = updatedPagamentos.map(
-      (pagamento, index) => ({
-        ...pagamento,
-        id: index + 1,
-      })
-    );
+      // Reordenar os IDs
+      const updatedPagamentosWithNewIds = updatedPagamentos.map(
+        (pagamento, index) => ({
+          ...pagamento,
+          id: index + 1,
+        })
+      );
 
-    setPagamentos(updatedPagamentosWithNewIds);
-    setNextId(updatedPagamentos.length + 1); // Atualizar o próximo ID
-    setOpenModal(false);
-    setIdToDelete(null);
+      setPagamentos(updatedPagamentosWithNewIds);
+      setNextId(updatedPagamentos.length + 1); // Atualizar o próximo ID
+      setOpenModal(false);
+      setIdToDelete(null);
+    }
   };
 
   const handleDelete = (id) => {
-    handleToggleOpenModal(id);
+    const pagamentoToDelete = pagamentos.find(
+      (pagamento) => pagamento.id === id
+    );
+    if (pagamentoToDelete) {
+      handleToggleOpenModal(id);
+    }
   };
 
   const handleRegister = (data) => {

@@ -34,6 +34,9 @@ const Saldos = () => {
         ...saldo,
         valorUtilizado,
         valorRestante: saldo.valorInicial - valorUtilizado,
+        descricaoPagamento: pagamentosDoSaldo
+          .map((pagamento) => pagamento.descricao)
+          .join(", "),
       };
     });
 
@@ -50,21 +53,26 @@ const Saldos = () => {
   };
 
   const handleConfirmModal = () => {
-    const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
+    if (idToDelete !== null) {
+      const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
 
-    // Reordenar os IDs
-    const updatedSaldosWithNewIds = updatedSaldos.map((saldo, index) => ({
-      ...saldo,
-      id: index + 1,
-    }));
+      // Reordenar os IDs
+      const updatedSaldosWithNewIds = updatedSaldos.map((saldo, index) => ({
+        ...saldo,
+        id: index + 1,
+      }));
 
-    setSaldos(updatedSaldosWithNewIds);
-    setOpenModal(false);
-    setIdToDelete(null);
+      setSaldos(updatedSaldosWithNewIds);
+      setOpenModal(false);
+      setIdToDelete(null);
+    }
   };
 
   const handleRemove = (id) => {
-    handleToggleOpenModal(id);
+    const saldoToDelete = saldos.find((saldo) => saldo.id === id);
+    if (saldoToDelete) {
+      handleToggleOpenModal(id);
+    }
   };
 
   const handleRegister = (data) => {
@@ -88,7 +96,12 @@ const Saldos = () => {
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     { field: "nome", headerName: "Nome", width: 250 },
-    { field: "descricao", headerName: "Descrição", width: 250 },
+    {
+      field: "descricaoPagamento",
+      headerName: "Descrição",
+      width: 250,
+      renderCell: (params) => <span>{params.value}</span>,
+    },
     {
       field: "valorInicial",
       headerName: "Valor inicial",
