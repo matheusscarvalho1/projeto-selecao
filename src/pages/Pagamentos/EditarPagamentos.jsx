@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -20,16 +20,12 @@ const EditPagamento = () => {
   const saldoRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
-  const [valueError, setValueError] = useState(false);
-  const [saldoError, setSaldoError] = useState(false);
 
   useEffect(() => {
     if (editPayment && editPayment.id.toString() === id) {
       nameRef.current.value = editPayment.nome;
       descriptionRef.current.value = editPayment.descricao;
       valueRef.current.value = editPayment.valor.toString();
-      // Define o valor do saldo para o ID do saldo vinculado ao pagamento
       saldoRef.current.value = editPayment.saldoId;
     }
   }, [editPayment, id, saldos]);
@@ -43,28 +39,6 @@ const EditPagamento = () => {
     } else {
       setNameError(false);
     }
-    if (!descriptionRef.current.value) {
-      hasError = true;
-      setDescriptionError(true);
-    } else {
-      setDescriptionError(false);
-    }
-    if (!valueRef.current.value) {
-      hasError = true;
-      setValueError(true);
-    } else {
-      setValueError(false);
-    }
-    if (!saldoRef.current.value) {
-      hasError = true;
-      setSaldoError(true);
-    } else {
-      setSaldoError(false);
-    }
-    if (isNaN(valueRef.current.value)) {
-      hasError = true;
-      setValueError(true);
-    }
 
     if (hasError) {
       return;
@@ -75,18 +49,11 @@ const EditPagamento = () => {
         ? {
             ...pagamento,
             nome: nameRef.current.value,
-            descricao: descriptionRef.current.value,
-            valor: parseFloat(valueRef.current.value),
-            saldoId: parseInt(saldoRef.current.value, 10), // Atualiza o ID do saldo vinculado
           }
         : pagamento
     );
 
     setPagamentos(updatedPagamentos);
-
-    nameRef.current.value = "";
-    descriptionRef.current.value = "";
-    valueRef.current.value = "";
 
     navigate("/pagamentos");
   };
@@ -116,10 +83,8 @@ const EditPagamento = () => {
             label="Descrição"
             variant="outlined"
             inputRef={descriptionRef}
-            error={descriptionError}
-            helperText={
-              descriptionError && "Digite o campo 'Descrição' corretamente."
-            }
+            defaultValue={editPayment?.descricao}
+            disabled
             className={styles.input}
           />
         </div>
@@ -129,8 +94,8 @@ const EditPagamento = () => {
             label="Valor"
             variant="outlined"
             inputRef={valueRef}
-            error={valueError}
-            helperText={valueError && "Digite o campo 'Valor' corretamente."}
+            defaultValue={editPayment?.valor}
+            disabled
             className={styles.input}
           />
         </div>
@@ -143,10 +108,10 @@ const EditPagamento = () => {
               <Select
                 labelId="select-saldo-label"
                 id="select-saldo"
-                value={saldoRef.current ? saldoRef.current.value : ""}
+                value={saldoRef.current?.value || ""}
                 inputRef={saldoRef}
-                error={saldoError}
                 label="Selecione o saldo a utilizar"
+                disabled
               >
                 <MenuItem value="" disabled>
                   Selecione um saldo

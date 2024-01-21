@@ -62,10 +62,6 @@ const RegistroSaldo = ({ onRegister }) => {
     valueRef.current.value = "";
     descriptionRef.current.value = "";
 
-    if (typeof onRegister === "function") {
-      onRegister(novoSaldo);
-    }
-
     navigate("/saldos");
   };
 

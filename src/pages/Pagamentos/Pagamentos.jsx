@@ -1,21 +1,26 @@
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton, Button } from "@mui/material";
+import { IconButton, Button, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import RegistroPagamento from "./RegistroPagamento";
 import { useNavigate } from "react-router-dom";
 import styles from "./pagamentos.module.css";
 import DeleteModal from "../../components/Modal";
 
+import RegistroPagamento from "./RegistroPagamento";
 import useAuth from "../../state/auth";
 
 const Pagamentos = () => {
   const navigate = useNavigate();
 
-  const { pagamentos, setPagamentos, nextId, setNextId, setEditPayment } =
-    useAuth();
+  const {
+    pagamentos,
+    setPagamentos,
+    nextId,
+    setNextId,
+    setEditPayment,
+    saldos,
+  } = useAuth();
 
   const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
@@ -23,14 +28,21 @@ const Pagamentos = () => {
   const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
-    setRows([...pagamentos]);
-  }, [pagamentos]);
+    const updatedRows = pagamentos.map((pagamento) => ({
+      ...pagamento,
+      saldoUsado: getSaldosUsados(pagamento.saldoId),
+    }));
+    setRows(updatedRows);
+  }, [pagamentos, saldos]);
+
+  const getSaldosUsados = (saldoId) => {
+    const saldo = saldos.find((s) => s.id === saldoId);
+    return saldo ? saldo.nome : "Saldo não encontrado";
+  };
 
   const handleEdit = (id) => {
     const paymentToEdit = pagamentos.find((payment) => payment.id === id);
-
     setEditPayment(paymentToEdit);
-
     navigate(`/pagamentos/edit/${id}`);
   };
 
@@ -40,7 +52,6 @@ const Pagamentos = () => {
         (pagamento) => pagamento.id !== idToDelete
       );
 
-      // Reordenar os IDs
       const updatedPagamentosWithNewIds = updatedPagamentos.map(
         (pagamento, index) => ({
           ...pagamento,
@@ -49,7 +60,7 @@ const Pagamentos = () => {
       );
 
       setPagamentos(updatedPagamentosWithNewIds);
-      setNextId(updatedPagamentos.length + 1); // Atualizar o próximo ID
+      setNextId(updatedPagamentos.length + 1);
       setOpenModal(false);
       setIdToDelete(null);
     }
@@ -72,11 +83,13 @@ const Pagamentos = () => {
   };
 
   const handleRegister = (data) => {
-    // Adicionar o novo pagamento ao estado pagamentos
-    const newPagamento = { ...data, id: nextId };
+    const newPagamento = {
+      ...data,
+      id: nextId,
+      saldoUsado: getSaldosUsados(data.saldoId),
+    };
     setPagamentos((prevPagamentos) => [...prevPagamentos, newPagamento]);
 
-    // Atualizar o nextId apenas se o novo item for adicionado
     if (newPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
@@ -107,15 +120,20 @@ const Pagamentos = () => {
       field: "valor",
       headerName: "Valor",
       type: "number",
-      width: 400,
+      width: 200,
       editable: true,
+    },
+    {
+      field: "saldoUsado",
+      headerName: "Saldo vinculado",
+      width: 200,
     },
     {
       field: "acoes",
       headerName: "Ações",
       description: "Editar e apagar registros",
       sortable: false,
-      width: 400,
+      width: 200,
       renderCell: (params) => {
         return (
           <>
@@ -143,7 +161,7 @@ const Pagamentos = () => {
     <>
       {rows.length === 0 ? (
         <div className={styles.box}>
-          <p>Você não possui pedidos abertos.</p>
+          <p>Você não possui pagamentos registrados.</p>
           {showForm ? (
             <RegistroPagamento onRegister={handleRegister} />
           ) : (
@@ -153,7 +171,7 @@ const Pagamentos = () => {
               className={styles.btn}
               onClick={handleCreateButton}
             >
-              Criar pedido
+              Criar pagamento
             </Button>
           )}
         </div>
