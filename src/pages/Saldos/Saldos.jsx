@@ -39,6 +39,10 @@ const Saldos = () => {
     setRows(updatedSaldos);
   }, [saldos, pagamentos]);
 
+  const hasPaymentsLinkedToSaldo = (saldoId) => {
+    return pagamentos.some((pagamento) => pagamento.saldoId === saldoId);
+  };
+
   const handleEdit = (id) => {
     navigate(`/saldos/edit/${id}`);
   };
@@ -50,8 +54,14 @@ const Saldos = () => {
 
   const handleConfirmModal = () => {
     if (idToDelete !== null) {
-      const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
+      const saldoToDelete = saldos.find((saldo) => saldo.id === idToDelete);
 
+      if (saldoToDelete && hasPaymentsLinkedToSaldo(idToDelete)) {
+        alert("Não é possível excluir. Pagamentos vinculados.");
+        return;
+      }
+
+      const updatedSaldos = saldos.filter((saldo) => saldo.id !== idToDelete);
       const updatedSaldosWithNewIds = updatedSaldos.map((saldo, index) => ({
         ...saldo,
         id: index + 1,
