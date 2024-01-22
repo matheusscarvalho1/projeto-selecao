@@ -65,6 +65,7 @@ const Header = () => {
       setToastyMessage("Você não efetuou login.");
     }
     setOpenToasty(true);
+    handleToggleMenu();
   };
 
   // Função para lidar com o fechamento do Toasty
