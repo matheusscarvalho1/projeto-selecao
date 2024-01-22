@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { MenuItem } from "@mui/material";
@@ -7,7 +7,8 @@ import useAuth from "../../state/auth";
 import Toasty from "../../components/Toasty";
 
 const RegistroPagamento = () => {
-  const { saldos, setPagamentos, setSaldos, nextId, setNextId } = useAuth();
+  const { saldos, pagamentos, setPagamentos, setSaldos, nextId, setNextId } =
+    useAuth();
   const navigate = useNavigate();
 
   const nameRef = useRef(null);
@@ -20,6 +21,31 @@ const RegistroPagamento = () => {
   const [descriptionError, setDescriptionError] = useState(false);
   const [valueError, setValueError] = useState(false);
   const [saldoError, setSaldoError] = useState(false);
+
+  const getSaldosUsados = () => {
+    const updatedSaldos = saldos.map((saldo) => {
+      const pagamentosDoSaldo = pagamentos.filter(
+        (pagamento) => pagamento.saldoId === saldo.id
+      );
+
+      const valorUtilizado = pagamentosDoSaldo.reduce(
+        (total, pagamento) => total + pagamento.valor,
+        0
+      );
+
+      return {
+        ...saldo,
+        valorUtilizado,
+        valorRestante: saldo.valorInicial - valorUtilizado,
+      };
+    });
+
+    setSaldos(updatedSaldos);
+  };
+
+  useEffect(() => {
+    getSaldosUsados();
+  }, [pagamentos]);
 
   const handleRegisterButton = () => {
     let hasError = false;
@@ -52,7 +78,6 @@ const RegistroPagamento = () => {
       setSaldoError(false);
     }
 
-    // Verificar se o valor é um número válido e maior que zero
     const parsedValue = parseFloat(valueRef.current.value);
     if (isNaN(parsedValue) || parsedValue <= 0) {
       hasError = true;
@@ -107,9 +132,6 @@ const RegistroPagamento = () => {
     setOpenToasty(true);
     Toasty({ severity: "success", message: "Cadastrado com sucesso." });
     navigate("/pagamentos");
-
-    // Exibir o toasty de sucesso
-    setOpenToasty(true);
   };
 
   const handleBackButton = () => {
@@ -191,7 +213,6 @@ const RegistroPagamento = () => {
         </Button>
       </div>
 
-      {/* Renderizar o Toasty apenas quando openToasty for verdadeiro */}
       {openToasty && (
         <Toasty
           open={openToasty}

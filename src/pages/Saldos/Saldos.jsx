@@ -57,7 +57,9 @@ const Saldos = () => {
       const saldoToDelete = saldos.find((saldo) => saldo.id === idToDelete);
 
       if (saldoToDelete && hasPaymentsLinkedToSaldo(idToDelete)) {
-        alert("Não é possível excluir. Pagamentos vinculados.");
+        alert(
+          "Não é possível excluir, pois existem pagamentos vinculados a esse saldo, para apagar esse saldo, primeiro remova os pagamentos vinculados a ele."
+        );
         return;
       }
 
