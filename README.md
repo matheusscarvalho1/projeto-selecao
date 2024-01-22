@@ -6,7 +6,8 @@
 
 </div>
 
-O projeto escolhido foi "Plataforma de pagamentos" desenvolvido com <strong>React.JS</strong>, estilizado com <strong>Material UI</strong> e com navegação utilizando <strong>React Router</strong>
+O projeto escolhido foi "Plataforma de pagamentos" desenvolvido com <strong>React.JS</strong>, estilizado com <strong>Material UI</strong> e com navegação utilizando <strong>React Router</strong>.
+
 Deploy (Vercel): [https://projeto-selecao-one.vercel.app](https://projeto-selecao-one.vercel.app)
 ## Pré requisitos
 
