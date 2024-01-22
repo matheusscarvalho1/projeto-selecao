@@ -35,23 +35,6 @@ Depois, é só abrir [http://localhost:3000](http://localhost:3000) no seu naveg
 
 # Resultados
 
-## Desktop
-
-<b><h3>#</h3></b>
-
-<div align="center">
-
-</div>
-
-<b><h3>#</h3></b>
-
-<div align="center">
-
-</div>
-
-<div align="center">
-
-</div>
 
 # Autor
 
