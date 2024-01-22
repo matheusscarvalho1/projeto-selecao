@@ -7,7 +7,7 @@
 </div>
 
 O projeto escolhido foi "Plataforma de pagamentos" desenvolvido com <strong>React.JS</strong>, estilizado com <strong>Material UI</strong> e com navegação utilizando <strong>React Router</strong>
-
+Deploy (Vercel): [https://projeto-selecao-one.vercel.app](https://projeto-selecao-one.vercel.app)
 ## Pré requisitos
 
 Você precisa ter instalado o [NodeJS](https://nodejs.org/) (Recomendado: versão 18) e o npm ou yarn.
