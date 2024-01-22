@@ -154,7 +154,9 @@ const RegistroPagamento = () => {
             inputRef={nameRef}
             error={nameError}
             className={styles.input}
-            helperText={nameError && "Por favor, preencha o nome."}
+            helperText={
+              nameError && "Por favor preencha o campo 'Nome' corretamente."
+            }
           />
         </div>
 
@@ -165,7 +167,10 @@ const RegistroPagamento = () => {
             inputRef={descriptionRef}
             error={descriptionError}
             className={styles.input}
-            helperText={descriptionError && "Por favor, preencha a descrição."}
+            helperText={
+              descriptionError &&
+              "Por favor preencha o campo 'Descrição' corretamente."
+            }
           />
         </div>
 
@@ -178,7 +183,7 @@ const RegistroPagamento = () => {
             className={styles.input}
             helperText={
               valueError &&
-              "Por favor, preencha um valor válido maior que zero para o pagamento."
+              "Por favor preencha o campo 'Valor' com um valor válido maior que zero para o pagamento."
             }
             InputProps={{
               startAdornment: <span>R$ </span>,
@@ -194,7 +199,7 @@ const RegistroPagamento = () => {
             inputRef={saldoRef}
             error={saldoError}
             className={styles.input}
-            helperText={saldoError && "Por favor, selecione um saldo."}
+            helperText={saldoError && "Por favor selecione um saldo."}
           >
             <MenuItem value="">
               <em>Selecione um saldo</em>

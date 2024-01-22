@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 
 import {
@@ -23,12 +22,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 import useAuth from "../../state/auth";
+import Toasty from "../../components/Toasty"; // Adicione esta importação
 
 import styles from "./header.module.css";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [toastySeverity, setToastySeverity] = useState("success");
+  const [toastyMessage, setToastyMessage] = useState("");
+  const [openToasty, setOpenToasty] = useState(false);
+
   const navigate = useNavigate();
+  const { user, setUser } = useAuth();
 
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -38,19 +43,25 @@ const Header = () => {
     navigate(route);
     handleToggleMenu();
   };
-  const { user, setUser } = useAuth();
 
   const handleLogout = () => {
-    user.logged
-      ? setTimeout(() => {
-          setUser({
-            logged: false,
-            email: "",
-          });
-          handleToggleMenu();
-          navigate("/");
-        }, 1500)
-      : alert("Você não efetuou login.");
+    if (user.logged) {
+      setUser({
+        logged: false,
+        email: "",
+      });
+
+      setToastySeverity("success");
+      setToastyMessage("Logout realizado com sucesso.");
+    } else {
+      setToastySeverity("error");
+      setToastyMessage("Você não efetuou login.");
+    }
+    setOpenToasty(true);
+  };
+
+  const handleToastyClose = () => {
+    setOpenToasty(false);
   };
 
   return (
@@ -118,6 +129,12 @@ const Header = () => {
           </ListItemButton>
         </List>
       </Drawer>
+      <Toasty
+        open={openToasty}
+        severity={toastySeverity}
+        onClose={handleToastyClose}
+        message={toastyMessage}
+      />
     </>
   );
 };

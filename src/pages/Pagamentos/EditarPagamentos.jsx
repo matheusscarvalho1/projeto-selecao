@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import useAuth from "../../state/auth";
 import styles from "./registroPagamento.module.css";
+import Toasty from "../../components/Toasty";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditPagamento = () => {
@@ -20,6 +21,7 @@ const EditPagamento = () => {
   const saldoRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
+  const [toastyOpen, setToastyOpen] = useState(false);
 
   useEffect(() => {
     if (editPayment && editPayment.id.toString() === id) {
@@ -55,7 +57,12 @@ const EditPagamento = () => {
 
     setPagamentos(updatedPagamentos);
 
-    navigate("/pagamentos");
+    // Exibir toasty e redirecionar após 2 segundos
+    setToastyOpen(true);
+    setTimeout(() => {
+      setToastyOpen(false);
+      navigate("/pagamentos");
+    }, 2000);
   };
 
   const handleBackButton = () => {
@@ -73,7 +80,7 @@ const EditPagamento = () => {
             variant="outlined"
             inputRef={nameRef}
             error={nameError}
-            helperText={nameError && "Digite o campo 'Nome' corretamente."}
+            helperText={nameError && "Preencha o campo 'Nome' corretamente."}
             className={styles.input}
           />
         </div>
@@ -135,6 +142,15 @@ const EditPagamento = () => {
           Salvar alterações
         </Button>
       </div>
+
+      {toastyOpen && (
+        <Toasty
+          open={toastyOpen}
+          onClose={() => setToastyOpen(false)}
+          severity="success"
+          message="Pedido atualizado com sucesso!"
+        />
+      )}
     </div>
   );
 };

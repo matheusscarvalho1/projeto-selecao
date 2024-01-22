@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteModal from "../../components/Modal";
+import Toasty from "../../components/Toasty";
 import useAuth from "../../state/auth";
 
 import styles from "./saldos.module.css";
@@ -16,6 +17,9 @@ const Saldos = () => {
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
+  const [toastySeverity, setToastySeverity] = useState("success");
+  const [toastyMessage, setToastyMessage] = useState("");
+  const [openToasty, setOpenToasty] = useState(false);
 
   useEffect(() => {
     const updatedSaldos = saldos.map((saldo) => {
@@ -52,14 +56,20 @@ const Saldos = () => {
     setOpenModal(!openModal);
   };
 
+  const handleToastyClose = () => {
+    setOpenToasty(false);
+  };
+
   const handleConfirmModal = () => {
     if (idToDelete !== null) {
       const saldoToDelete = saldos.find((saldo) => saldo.id === idToDelete);
 
       if (saldoToDelete && hasPaymentsLinkedToSaldo(idToDelete)) {
-        alert(
-          "Não é possível excluir, pois existem pagamentos vinculados a esse saldo, para apagar esse saldo, primeiro remova os pagamentos vinculados a ele."
+        setToastySeverity("error");
+        setToastyMessage(
+          "Não é possível excluir, pois existem pagamentos vinculados a esse saldo. Para apagar este saldo, primeiro remova os pagamentos vinculados a ele."
         );
+        setOpenToasty(true);
         return;
       }
 
@@ -189,6 +199,12 @@ const Saldos = () => {
             onConfirm={handleConfirmModal}
             title="Excluir Pedido?"
             message="Se excluir este pedido, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
+          />
+          <Toasty
+            open={openToasty}
+            severity={toastySeverity}
+            onClose={handleToastyClose}
+            message={toastyMessage}
           />
         </Box>
       )}

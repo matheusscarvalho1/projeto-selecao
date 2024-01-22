@@ -2,12 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import useAuth from "../../state/auth";
 import { useNavigate, useParams } from "react-router-dom";
+import Toasty from "../../components/Toasty";
 import styles from "./registroSaldo.module.css";
 
 const EditSaldo = () => {
   const { saldos, setSaldos } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [nameError, setNameError] = useState(false);
+  const [toastyOpen, setToastyOpen] = useState(false);
 
   const [saldo, setSaldo] = useState(null);
   const nameRef = useRef(null);
@@ -28,6 +32,19 @@ const EditSaldo = () => {
   }, [id, saldos, navigate]);
 
   const handleUpdateButton = () => {
+    let hasError = false;
+
+    if (!nameRef.current.value) {
+      hasError = true;
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+
+    if (hasError) {
+      return;
+    }
+
     let updatedSaldo = {
       ...saldo,
       nome: nameRef.current.value,
@@ -39,7 +56,12 @@ const EditSaldo = () => {
 
     setSaldos(updatedSaldos);
 
-    navigate("/saldos");
+    // Exibir toasty e redirecionar após 2 segundos
+    setToastyOpen(true);
+    setTimeout(() => {
+      setToastyOpen(false);
+      navigate("/saldos");
+    }, 2000);
   };
 
   const handleBackButton = () => {
@@ -57,6 +79,8 @@ const EditSaldo = () => {
             variant="outlined"
             inputRef={nameRef}
             defaultValue={saldo?.nome}
+            error={nameError}
+            helperText={nameError && "Preencha o campo 'Nome' corretamente."}
             className={styles.input}
           />
         </div>
@@ -95,6 +119,12 @@ const EditSaldo = () => {
           Atualizar
         </Button>
       </div>
+      <Toasty
+        open={toastyOpen}
+        onClose={() => setToastyOpen(false)}
+        severity="success"
+        message="Saldo atualizado com sucesso!"
+      />
     </div>
   );
 };
