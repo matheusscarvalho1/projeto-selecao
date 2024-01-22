@@ -46,7 +46,7 @@ const RegistroPagamento = () => {
 
   useEffect(() => {
     getSaldosUsados();
-  }, [pagamentos]);
+  }, [getSaldosUsados, pagamentos]);
 
   const handleRegisterButton = () => {
     let hasError = false;
@@ -232,7 +232,7 @@ const RegistroPagamento = () => {
           open={openSuccessToasty}
           severity="success"
           onClose={() => setOpenSuccessToasty(false)}
-          message="Pagamento registrado com sucesso."
+          message="Pedido criado com sucesso."
         />
       )}
     </div>
