@@ -17,10 +17,11 @@ const RegistroPagamento = () => {
   const saldoRef = useRef(null);
 
   const [nameError, setNameError] = useState(false);
-  const [openToasty, setOpenToasty] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [valueError, setValueError] = useState(false);
   const [saldoError, setSaldoError] = useState(false);
+  const [openErrorToasty, setOpenErrorToasty] = useState(false);
+  const [openSuccessToasty, setOpenSuccessToasty] = useState(false);
 
   const getSaldosUsados = () => {
     const updatedSaldos = saldos.map((saldo) => {
@@ -100,7 +101,7 @@ const RegistroPagamento = () => {
     const valorPagamento = parsedValue;
 
     if (valorPagamento > selectedSaldo.valorRestante) {
-      setOpenToasty(true);
+      setOpenErrorToasty(true);
       return;
     }
 
@@ -129,9 +130,13 @@ const RegistroPagamento = () => {
     if (novoPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
-    setOpenToasty(true);
-    Toasty({ severity: "success", message: "Cadastrado com sucesso." });
-    navigate("/pagamentos");
+
+    setOpenSuccessToasty(true);
+
+    // Agora, você pode fazer a navegação após um breve intervalo
+    setTimeout(() => {
+      navigate("/pagamentos");
+    }, 1500); // Mude para o tempo desejado (em milissegundos) para exibir o toasty
   };
 
   const handleBackButton = () => {
@@ -213,12 +218,21 @@ const RegistroPagamento = () => {
         </Button>
       </div>
 
-      {openToasty && (
+      {openErrorToasty && (
         <Toasty
-          open={openToasty}
+          open={openErrorToasty}
           severity="error"
-          onClose={() => setOpenToasty(false)}
+          onClose={() => setOpenErrorToasty(false)}
           message="O valor do pagamento ultrapassa o saldo disponível."
+        />
+      )}
+
+      {openSuccessToasty && (
+        <Toasty
+          open={openSuccessToasty}
+          severity="success"
+          onClose={() => setOpenSuccessToasty(false)}
+          message="Pagamento registrado com sucesso."
         />
       )}
     </div>
