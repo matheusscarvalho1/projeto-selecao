@@ -11,7 +11,13 @@ const Page = ({ title, Component }) => {
     <>
       <Container maxWidth={false} style={{ padding: 0 }}>
         <Header user={user} />
-        <Typography variant="h3" component="h2" gutterBottom>
+        <Typography
+          variant="h3"
+          component="h2"
+          gutterBottom
+          fontFamily={"roboto"}
+          margin={"1rem"}
+        >
           {title}
         </Typography>
 

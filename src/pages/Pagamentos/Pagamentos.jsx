@@ -7,22 +7,14 @@ import { useNavigate } from "react-router-dom";
 import styles from "./pagamentos.module.css";
 import DeleteModal from "../../components/Modal";
 
-import RegistroPagamento from "./RegistroPagamento";
 import useAuth from "../../state/auth";
 
 const Pagamentos = () => {
   const navigate = useNavigate();
 
-  const {
-    pagamentos,
-    setPagamentos,
-    nextId,
-    setNextId,
-    setEditPayment,
-    saldos,
-  } = useAuth();
+  const { pagamentos, setPagamentos, setNextId, setEditPayment, saldos } =
+    useAuth();
 
-  const [showForm, setShowForm] = useState(false);
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
@@ -80,22 +72,6 @@ const Pagamentos = () => {
         handleToggleOpenModal(id);
       }
     }
-  };
-
-  const handleRegister = (data) => {
-    const newPagamento = {
-      ...data,
-      id: nextId,
-      saldoUsado: getSaldosUsados(data.saldoId),
-    };
-    setPagamentos((prevPagamentos) => [...prevPagamentos, newPagamento]);
-
-    if (newPagamento.id === nextId) {
-      setNextId(nextId + 1);
-    }
-
-    setShowForm(false);
-    alert("Registro adicionado");
   };
 
   const handleCreateButton = () => {
@@ -161,19 +137,15 @@ const Pagamentos = () => {
     <>
       {rows.length === 0 ? (
         <div className={styles.box}>
-          <p>Você não possui pagamentos registrados.</p>
-          {showForm ? (
-            <RegistroPagamento onRegister={handleRegister} />
-          ) : (
-            <Button
-              color="blue"
-              variant="contained"
-              className={styles.btn}
-              onClick={handleCreateButton}
-            >
-              Criar pagamento
-            </Button>
-          )}
+          <p>Você não possui pedidos abertos.</p>
+          <Button
+            color="blue"
+            variant="contained"
+            className={styles.btn}
+            onClick={handleCreateButton}
+          >
+            Criar pedido
+          </Button>
         </div>
       ) : (
         <Box className={styles.table}>

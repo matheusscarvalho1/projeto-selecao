@@ -62,18 +62,23 @@ const Header = () => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            className={styles.icon}
             onClick={() => handleToggleMenu()}
           >
-            <MenuIcon />
+            <MenuIcon className={styles.icon} />
           </IconButton>
-          <Typography variant="h6" component="div" className={styles.menuBar}>
+          <Typography
+            variant="h6"
+            component="div"
+            fontFamily="alata"
+            fontSize={34}
+            className={styles.menuBar}
+          >
             Payments
           </Typography>
           {user.logged ? (
             <div className={styles.user}>
               <Typography variant="h6">{user.email}</Typography>
-              <AccountCircle />
+              <AccountCircle fontSize="large" />
             </div>
           ) : (
             <Button color="inherit" onClick={() => handleMenuClick("/login")}>

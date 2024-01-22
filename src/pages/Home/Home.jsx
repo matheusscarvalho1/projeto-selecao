@@ -1,7 +1,8 @@
+import styles from "./home.module.css";
 const Home = () => {
   return (
     <>
-      <h2>Seja bem vindo!</h2>
+      <h2 className={styles.title}>Seja bem vindo!</h2>
     </>
   );
 };

@@ -153,7 +153,7 @@ const RegistroSaldo = ({ onRegister }) => {
           open={toastyOpen}
           severity="success"
           onClose={handleToastyClose}
-          message="Saldo cadastrado com sucesso!"
+          message="Saldo criado com sucesso!"
         />
       </div>
     </div>
