@@ -22,28 +22,35 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 import useAuth from "../../state/auth";
-import Toasty from "../../components/Toasty"; // Adicione esta importação
+import Toasty from "../../components/Toasty";
 
 import styles from "./header.module.css";
 
 const Header = () => {
+  // Hooks de estado
   const [menuOpen, setMenuOpen] = useState(false);
   const [toastySeverity, setToastySeverity] = useState("success");
   const [toastyMessage, setToastyMessage] = useState("");
   const [openToasty, setOpenToasty] = useState(false);
 
+  // Hooks do React Router para navegação
   const navigate = useNavigate();
+
+  // Hooks Glogal (Context API)
   const { user, setUser } = useAuth();
 
+  // Função para lidar com a abertura/fechamento do menu
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  // Função para lidar com cliques nos itens do menu
   const handleMenuClick = (route) => {
     navigate(route);
     handleToggleMenu();
   };
 
+  // Função para lidar com o logout do usuário
   const handleLogout = () => {
     if (user.logged) {
       setUser({
@@ -60,6 +67,7 @@ const Header = () => {
     setOpenToasty(true);
   };
 
+  // Função para lidar com o fechamento do Toasty
   const handleToastyClose = () => {
     setOpenToasty(false);
   };

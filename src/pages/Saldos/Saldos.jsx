@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -7,20 +7,27 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteModal from "../../components/Modal";
 import Toasty from "../../components/Toasty";
+
 import useAuth from "../../state/auth";
 
 import styles from "./saldos.module.css";
 
 const Saldos = () => {
-  const navigate = useNavigate();
+  // Hooks Glogal (Context API)
   const { saldos, setSaldos, pagamentos } = useAuth();
+
+  const navigate = useNavigate();
+
+  // useStates
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const [toastySeverity, setToastySeverity] = useState("success");
   const [toastyMessage, setToastyMessage] = useState("");
+
   const [openToasty, setOpenToasty] = useState(false);
 
+  // Hook para atualizar os dados da tabela quando há alterações nos saldos ou pagamentos
   useEffect(() => {
     const updatedSaldos = saldos.map((saldo) => {
       const pagamentosDoSaldo = pagamentos.filter(
@@ -43,23 +50,31 @@ const Saldos = () => {
     setRows(updatedSaldos);
   }, [saldos, pagamentos]);
 
+  // Função para verificar se há pagamentos vinculados a um saldo
   const hasPaymentsLinkedToSaldo = (saldoId) => {
     return pagamentos.some((pagamento) => pagamento.saldoId === saldoId);
   };
 
+  // Função para navegar até a página de edição de um saldo
   const handleEdit = (id) => {
     navigate(`/saldos/edit/${id}`);
   };
 
+  // Função para iniciar a exclusão de um saldo
+  const handleRemove = (id) => {
+    const saldoToDelete = saldos.find((saldo) => saldo.id === id);
+    if (saldoToDelete) {
+      handleToggleOpenModal(id);
+    }
+  };
+
+  // Função para abrir ou fechar o modal de exclusão
   const handleToggleOpenModal = (id) => {
     setIdToDelete(id);
     setOpenModal(!openModal);
   };
 
-  const handleToastyClose = () => {
-    setOpenToasty(false);
-  };
-
+  // Função chamada ao confirmar a exclusão no modal
   const handleConfirmModal = () => {
     if (idToDelete !== null) {
       const saldoToDelete = saldos.find((saldo) => saldo.id === idToDelete);
@@ -67,7 +82,7 @@ const Saldos = () => {
       if (saldoToDelete && hasPaymentsLinkedToSaldo(idToDelete)) {
         setToastySeverity("error");
         setToastyMessage(
-          "Não é possível excluir, pois existem pagamentos vinculados a esse saldo. Para apagar este saldo, primeiro remova os pagamentos vinculados a ele."
+          "Não é possível excluir, pois existem pagamentos vinculados a esse saldo. Para apagar este saldo, primeiro apague os pagamentos vinculados a ele."
         );
         setOpenToasty(true);
         return;
@@ -85,13 +100,12 @@ const Saldos = () => {
     }
   };
 
-  const handleRemove = (id) => {
-    const saldoToDelete = saldos.find((saldo) => saldo.id === id);
-    if (saldoToDelete) {
-      handleToggleOpenModal(id);
-    }
+  // Função para fechar o Toasty
+  const handleToastyClose = () => {
+    setOpenToasty(false);
   };
 
+  // Função para navegar até a página de adição de um novo saldo
   const handleCreateButton = () => {
     navigate("/saldos/add");
   };
@@ -197,9 +211,10 @@ const Saldos = () => {
             open={openModal}
             onClose={handleToggleOpenModal}
             onConfirm={handleConfirmModal}
-            title="Excluir Pedido?"
-            message="Se excluir este pedido, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
+            title="Excluir Saldo?"
+            message="Se excluir este saldo, esta ação não poderá ser revertida. Tem certeza que deseja excluir?"
           />
+
           <Toasty
             open={openToasty}
             severity={toastySeverity}

@@ -1,25 +1,38 @@
 import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
 import useAuth from "../../state/auth";
-import Toasty from "../../components/Toasty"; // Certifique-se de importar o componente Toasty
+
+import Toasty from "../../components/Toasty";
+
 import styles from "./login.module.css";
 
 const Login = () => {
-  const navigate = useNavigate();
+  // Hooks Glogal (Context API)
   const { user, setUser } = useAuth();
+
+  const navigate = useNavigate();
+
+  // Estado para armazenar os dados do formulário
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  // Estado para controle da simulação de carregamento
   const [isLoading, setIsLoading] = useState(false);
+
+  // Estado para exibir ou esconder o componente Toasty
   const [showToasty, setShowToasty] = useState(false);
 
+  // Manipulador de alteração nos campos do formulário
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
+  // Manipulador de envio do formulário
   const handleFormSubmit = () => {
     setIsLoading(true);
 
@@ -33,17 +46,17 @@ const Login = () => {
       setIsLoading(false);
       setShowToasty(true);
 
-      // Navega para a página inicial após 2 segundos
       setTimeout(() => {
         navigate("/");
       }, 2000);
-    }, 3000);
+    }, 2000);
   };
 
   const handleBack = () => {
     navigate("/");
   };
 
+  // Manipulador de fechamento do componente Toasty
   const handleToastyClose = () => {
     setShowToasty(false);
   };
@@ -63,15 +76,23 @@ const Login = () => {
           name="password"
           type="password"
         />
-        <Button onClick={handleFormSubmit} variant="contained" color="primary">
+        <Button
+          onClick={handleFormSubmit}
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+        >
           {isLoading ? "Carregando..." : "Entrar"}
         </Button>
-        <Button onClick={() => handleBack()} variant="outlined" color="primary">
+        <Button
+          onClick={handleBack}
+          variant="outlined"
+          color="primary"
+          disabled={isLoading}
+        >
           Voltar
         </Button>
       </div>
-
-      {/* Componente Toasty para exibir a mensagem de sucesso */}
       <Toasty
         open={showToasty}
         severity="success"

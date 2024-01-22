@@ -1,21 +1,27 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import { MenuItem } from "@mui/material";
-import styles from "./registroPagamento.module.css";
+
+import { useNavigate } from "react-router-dom";
+
 import useAuth from "../../state/auth";
 import Toasty from "../../components/Toasty";
 
+import styles from "./registroPagamento.module.css";
 const RegistroPagamento = () => {
+  // Hook Glogal (Context API)
   const { saldos, pagamentos, setPagamentos, setSaldos, nextId, setNextId } =
     useAuth();
+
   const navigate = useNavigate();
 
+  // Hooks de referência
   const nameRef = useRef(null);
   const descriptionRef = useRef(null);
   const valueRef = useRef(null);
   const saldoRef = useRef(null);
 
+  // Hooks de estado
   const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [valueError, setValueError] = useState(false);
@@ -23,6 +29,7 @@ const RegistroPagamento = () => {
   const [openErrorToasty, setOpenErrorToasty] = useState(false);
   const [openSuccessToasty, setOpenSuccessToasty] = useState(false);
 
+  // Atualiza os saldos com os valores utilizados
   const getSaldosUsados = () => {
     const updatedSaldos = saldos.map((saldo) => {
       const pagamentosDoSaldo = pagamentos.filter(
@@ -44,6 +51,7 @@ const RegistroPagamento = () => {
     setSaldos(updatedSaldos);
   };
 
+  // Hook para atualizar os saldos quando os pagamentos mudam
   useEffect(() => {
     getSaldosUsados();
   }, [pagamentos]);
@@ -51,6 +59,7 @@ const RegistroPagamento = () => {
   const handleRegisterButton = () => {
     let hasError = false;
 
+    // Validação dos campos
     if (!nameRef.current.value) {
       hasError = true;
       setNameError(true);
@@ -79,6 +88,7 @@ const RegistroPagamento = () => {
       setSaldoError(false);
     }
 
+    // Validação do valor do pagamento (deve ser um número válido e maior que zero)
     const parsedValue = parseFloat(valueRef.current.value);
     if (isNaN(parsedValue) || parsedValue <= 0) {
       hasError = true;
@@ -89,22 +99,27 @@ const RegistroPagamento = () => {
       return;
     }
 
+    // Encontrar o saldo selecionado
     const selectedSaldo = saldos.find(
       (saldo) => saldo.id === parseInt(saldoRef.current.value, 10)
     );
 
+    // Se o saldo não for encontrado, exibir mensagem de erro
     if (!selectedSaldo) {
       Toasty({ severity: "error", message: "Saldo não encontrado." });
       return;
     }
 
+    // Valor do pagamento
     const valorPagamento = parsedValue;
 
+    // Verificar se o valor do pagamento ultrapassa o saldo disponível
     if (valorPagamento > selectedSaldo.valorRestante) {
       setOpenErrorToasty(true);
       return;
     }
 
+    // Criar novo pagamento
     const novoPagamento = {
       id: nextId,
       nome: nameRef.current.value,
@@ -113,30 +128,33 @@ const RegistroPagamento = () => {
       saldoId: parseInt(saldoRef.current.value, 10),
     };
 
+    // Atualizar o saldo selecionado com os novos valores utilizados
     const saldoAtualizado = {
       ...selectedSaldo,
       valorUtilizado: selectedSaldo.valorUtilizado + valorPagamento,
       valorRestante: selectedSaldo.valorRestante - valorPagamento,
     };
 
+    // Atualizar a lista de saldos com o saldo atualizado
     const saldosAtualizados = saldos.map((saldo) =>
       saldo.id === selectedSaldo.id ? saldoAtualizado : saldo
     );
 
     setSaldos(saldosAtualizados);
 
+    // Adicionar o novo pagamento à lista de pagamentos
     setPagamentos((prevPagamentos) => [...prevPagamentos, novoPagamento]);
 
+    // Atualizar o ID para o próximo ID disponível
     if (novoPagamento.id === nextId) {
       setNextId(nextId + 1);
     }
 
     setOpenSuccessToasty(true);
 
-    // Agora, você pode fazer a navegação após um breve intervalo
     setTimeout(() => {
       navigate("/pagamentos");
-    }, 1500); // Mude para o tempo desejado (em milissegundos) para exibir o toasty
+    }, 1500);
   };
 
   const handleBackButton = () => {
@@ -159,7 +177,6 @@ const RegistroPagamento = () => {
             }
           />
         </div>
-
         <div>
           <TextField
             label="Descrição"
@@ -173,7 +190,6 @@ const RegistroPagamento = () => {
             }
           />
         </div>
-
         <div>
           <TextField
             label="Valor"
@@ -190,7 +206,6 @@ const RegistroPagamento = () => {
             }}
           />
         </div>
-
         <div>
           <TextField
             select
@@ -213,7 +228,6 @@ const RegistroPagamento = () => {
           </TextField>
         </div>
       </div>
-
       <div className={styles.btns}>
         <Button color="blue" variant="outlined" onClick={handleBackButton}>
           Voltar
@@ -222,7 +236,6 @@ const RegistroPagamento = () => {
           Registrar Pagamento
         </Button>
       </div>
-
       {openErrorToasty && (
         <Toasty
           open={openErrorToasty}
@@ -231,13 +244,12 @@ const RegistroPagamento = () => {
           message="O valor do pagamento ultrapassa o saldo disponível."
         />
       )}
-
       {openSuccessToasty && (
         <Toasty
           open={openSuccessToasty}
           severity="success"
           onClose={() => setOpenSuccessToasty(false)}
-          message="Pedido criado com sucesso!"
+          message="Pagamento registrado com sucesso!"
         />
       )}
     </div>

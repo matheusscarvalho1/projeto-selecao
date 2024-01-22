@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Button, Box } from "@mui/material";
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
-import styles from "./pagamentos.module.css";
+
 import DeleteModal from "../../components/Modal";
 
+import { useNavigate } from "react-router-dom";
 import useAuth from "../../state/auth";
+
+import styles from "./pagamentos.module.css";
 
 const Pagamentos = () => {
   const navigate = useNavigate();
 
+  // Hooks Glogal (Context API)
   const { pagamentos, setPagamentos, setNextId, setEditPayment, saldos } =
     useAuth();
 
+  // useStates
   const [rows, setRows] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
 
   useEffect(() => {
+    // Atualiza as linhas do DataGrid quando há alterações nos pagamentos ou saldos
     const updatedRows = pagamentos.map((pagamento) => ({
       ...pagamento,
       saldoUsado: getSaldosUsados(pagamento.saldoId),
@@ -33,6 +39,7 @@ const Pagamentos = () => {
   };
 
   const handleEdit = (id) => {
+    // Define o pagamento a ser editado e navega para a página de edição
     const paymentToEdit = pagamentos.find((payment) => payment.id === id);
     setEditPayment(paymentToEdit);
     navigate(`/pagamentos/edit/${id}`);
@@ -40,6 +47,7 @@ const Pagamentos = () => {
 
   const handleConfirmModal = () => {
     if (idToDelete !== null) {
+      // Confirma a exclusão do pagamento
       const updatedPagamentos = pagamentos.filter(
         (pagamento) => pagamento.id !== idToDelete
       );
@@ -65,6 +73,7 @@ const Pagamentos = () => {
 
   const handleDelete = (id) => {
     if (pagamentos && pagamentos.length > 0) {
+      // Verifica se o pagamento existe antes de abrir o modal de exclusão
       const pagamentoToDelete = pagamentos.find(
         (pagamento) => pagamento.id === id
       );
@@ -80,18 +89,8 @@ const Pagamentos = () => {
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "nome",
-      headerName: "Nome",
-      width: 400,
-      editable: true,
-    },
-    {
-      field: "descricao",
-      headerName: "Descrição",
-      width: 400,
-      editable: true,
-    },
+    { field: "nome", headerName: "Nome", width: 400, editable: true },
+    { field: "descricao", headerName: "Descrição", width: 400, editable: true },
     {
       field: "valor",
       headerName: "Valor",
@@ -99,11 +98,7 @@ const Pagamentos = () => {
       width: 200,
       editable: true,
     },
-    {
-      field: "saldoUsado",
-      headerName: "Saldo vinculado",
-      width: 200,
-    },
+    { field: "saldoUsado", headerName: "Saldo vinculado", width: 200 },
     {
       field: "acoes",
       headerName: "Ações",
@@ -113,6 +108,7 @@ const Pagamentos = () => {
       renderCell: (params) => {
         return (
           <>
+            {/* Botões de editar e excluir na célula de ações */}
             <IconButton
               color="primary"
               aria-label="Editar"
@@ -176,7 +172,6 @@ const Pagamentos = () => {
             checkboxSelection
             disableRowSelectionOnClick
           />
-
           <DeleteModal
             color="red"
             open={openModal}

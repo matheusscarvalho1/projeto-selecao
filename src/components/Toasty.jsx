@@ -3,6 +3,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
 const Toasty = ({ open, severity, onClose, message }) => {
+  // Manipulador de fechamento do Toasty
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -28,4 +29,5 @@ const Toasty = ({ open, severity, onClose, message }) => {
     </>
   );
 };
+
 export default Toasty;

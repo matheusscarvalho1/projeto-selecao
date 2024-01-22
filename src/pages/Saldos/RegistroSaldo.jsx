@@ -1,26 +1,33 @@
 import { useState, useRef } from "react";
 import { TextField, Button } from "@mui/material";
 import Toasty from "../../components/Toasty";
-import styles from "./registroSaldo.module.css";
+
 import useAuth from "../../state/auth";
 import { useNavigate } from "react-router-dom";
 
-const RegistroSaldo = () => {
-  const { setSaldos, nextId, setNextId } = useAuth();
-  const navigate = useNavigate();
+import styles from "./registroSaldo.module.css";
 
+const RegistroSaldo = () => {
+  // Hooks Glogal (Context API)
+  const { setSaldos, nextId, setNextId } = useAuth();
+
+  // Hooks de estado e referências
+  const navigate = useNavigate();
   const nameRef = useRef(null);
   const valueRef = useRef(null);
   const descriptionRef = useRef(null);
 
+  // Estado para validação dos campos e controle do Toasty
   const [nameError, setNameError] = useState(false);
   const [valueError, setValueError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const [toastyOpen, setToastyOpen] = useState(false);
 
+  // Manipulador de clique para o botão de registro
   const handleRegisterButton = () => {
     let hasError = false;
 
+    // Validação dos campos
     if (!nameRef.current.value) {
       hasError = true;
       setNameError(true);
@@ -42,10 +49,12 @@ const RegistroSaldo = () => {
       setValueError(false);
     }
 
+    // Se houver erros, retorna
     if (hasError) {
       return;
     }
 
+    // Criação de um novo saldo
     const novoSaldo = {
       id: nextId,
       nome: nameRef.current.value,
@@ -55,9 +64,11 @@ const RegistroSaldo = () => {
       valorRestante: parseFloat(valueRef.current.value),
     };
 
+    // Atualização do estado com o novo saldo e ID
     setSaldos((prevSaldos) => [...prevSaldos, novoSaldo]);
     setNextId((prevId) => prevId + 1);
 
+    // Exibição do Toasty de sucesso e navegação para a página de saldos
     setToastyOpen(true);
 
     setTimeout(() => {

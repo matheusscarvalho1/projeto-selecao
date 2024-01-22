@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const Modal = ({ open, onConfirm, onClose, title, message }) => {
   return (
+    // Componente Dialog do Material-UI para criar um modal
     <Dialog open={open} onClose={onClose}>
       <DialogTitle
         sx={{ display: "flex", alignItems: "center", gap: "1.5rem" }}

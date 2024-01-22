@@ -1,28 +1,39 @@
 import React, { useState, useRef, useEffect } from "react";
-import { TextField, Button } from "@mui/material";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import {
+  TextField,
+  Button,
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
+
 import useAuth from "../../state/auth";
-import styles from "./registroPagamento.module.css";
-import Toasty from "../../components/Toasty";
 import { useNavigate, useParams } from "react-router-dom";
 
+import Toasty from "../../components/Toasty";
+
+import styles from "./registroPagamento.module.css";
+
 const EditPagamento = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+  // Hooks Glogal (Context API)
   const { saldos, pagamentos, setPagamentos, editPayment } = useAuth();
 
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  // Refs para os campos do formulário
   const nameRef = useRef(null);
   const descriptionRef = useRef(null);
   const valueRef = useRef(null);
   const saldoRef = useRef(null);
 
+  // State para tratamento de erros
   const [nameError, setNameError] = useState(false);
   const [toastyOpen, setToastyOpen] = useState(false);
 
+  // Hook para preencher os campos do formulário com os dados do pagamento a ser editado
   useEffect(() => {
     if (editPayment && editPayment.id.toString() === id) {
       nameRef.current.value = editPayment.nome;
@@ -32,9 +43,11 @@ const EditPagamento = () => {
     }
   }, [editPayment, id, saldos]);
 
+  // Manipulador de clique no botão de registro
   const handleRegisterButton = () => {
     let hasError = false;
 
+    // Validação do campo de nome
     if (!nameRef.current.value) {
       hasError = true;
       setNameError(true);
@@ -42,10 +55,12 @@ const EditPagamento = () => {
       setNameError(false);
     }
 
+    // Se houver erro, retorna
     if (hasError) {
       return;
     }
 
+    // Atualiza os pagamentos com os novos dados
     const updatedPagamentos = pagamentos.map((pagamento) =>
       pagamento.id.toString() === id
         ? {
@@ -57,7 +72,6 @@ const EditPagamento = () => {
 
     setPagamentos(updatedPagamentos);
 
-    // Exibir toasty e redirecionar após 2 segundos
     setToastyOpen(true);
     setTimeout(() => {
       setToastyOpen(false);
@@ -133,7 +147,6 @@ const EditPagamento = () => {
           </Box>
         </div>
       </div>
-
       <div className={styles.btns}>
         <Button variant="outlined" color="primary" onClick={handleBackButton}>
           Voltar
@@ -142,7 +155,6 @@ const EditPagamento = () => {
           Salvar alterações
         </Button>
       </div>
-
       {toastyOpen && (
         <Toasty
           open={toastyOpen}

@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import Container from "@mui/material/Container";
+
 import Header from "../partials/Header/Header";
 
 import useAuth from "../state/auth";
@@ -20,7 +21,7 @@ const Page = ({ title, Component }) => {
         >
           {title}
         </Typography>
-
+        {/* Renderiza o componente passado como propriedade (Component), se existir */}
         {Component && <Component />}
       </Container>
     </>
