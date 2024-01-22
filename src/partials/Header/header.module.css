@@ -4,12 +4,9 @@
   gap: 0.625rem;
 }
 
-.icon {
-  margin-right: 2rem;
-}
-
 .menuBar {
   flex-grow: 1;
+  margin-left: 2rem;
 }
 
 .toggleBar {
